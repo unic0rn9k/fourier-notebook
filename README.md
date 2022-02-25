@@ -4,5 +4,6 @@
 
 # Tooling used in notebook
  - [Rust](https://rust-lang.org)
+ - [Evcxr](https://lib.rs/crates/evcxr)
  - [Plotly](https://lib.rs/plotly)
  - [Slas](https://github.com/unic0rn9k/slas)
