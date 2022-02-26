@@ -175,22 +175,21 @@ $$
 
 her vil det gælde at
 $$
-\hat{b}(x) = b(i^x)
+\hat{b}(x) = b((-i)^x)
 $$
 
 *Eksempel med Julia:*
 #+begin_src julia
-julia> f(x) = 2*x^2 + 3*x^3 + x
-f (generic function with 1 method)
+julia> b(x) = 2*x^2 + 3*x^3 + x
+b (generic function with 1 method)
 
-julia> for n in 0:4
-            println(f(im^n))
+julia> for n in 0:3
+            println(b((-im)^n))
        end
  6 + 0im
--2 - 2im
--2 + 0im
 -2 + 2im
- 6 + 0im
+-2 + 0im
+-2 - 2im
 
 julia> fft([0, 1, 2, 3])
 4-element Vector{ComplexF64}:
@@ -199,6 +198,10 @@ julia> fft([0, 1, 2, 3])
  -2.0 + 0.0im
  -2.0 - 2.0im
 #+end_src
+
+I eksemplet over kan man tydeligt see $O(n^2)$ kompleksiteten,
+der funktionen $b$ har $n$ der skal udregnes,
+og $b$ sig selv skal også computeres $n$ gange.
 
 Polynomier af en lige grad er spejlet om y-aksen.
 Polynomier af en ulige grad er spejlet om y-aksen og x-aksen.
