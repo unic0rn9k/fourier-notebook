@@ -163,12 +163,12 @@ DFT algoritmen har en algoritmisk kompleksitet på $O(n^2)$ der $\hat{g}$ er en 
 Polynomier af en lige grad er spejlet om y-aksen.
 Polynomier af en ulige grad er spejlet om y-aksen og x-aksen.
 
-#+BEGIN_SRC sage
+#+BEGIN_SRC sage :file even_and_odd.png
 plot(x^2) + plot(x^3, color='red') + plot(x^4) + plot(x^5, color='red') + plot(x^6) + plot(x^7, color='red')
 #+END_SRC
 
 #+RESULTS:
-[[file:/home/unic0rn9k/.sage/temp/unic0rn9k/714/tmp_bpysx4q3.png]]
+[[file:/home/unic0rn9k/.sage/temp/unic0rn9k/714/tmp_azg5t_nx.png]]
 
 *** Rekursion
 
