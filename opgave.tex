@@ -1,4 +1,4 @@
-% Created 2022-02-26 Sat 14:47
+% Created 2022-02-26 Sat 16:01
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
@@ -62,9 +62,9 @@ github repo - \url{https://github.com/unic0nr9k/fourier-notebook}
 \newpage
 
 \section{Teori}
-\label{sec:org28993c2}
+\label{sec:org1f5ece4}
 \subsection{Rekursion og funktionel programmering}
-\label{sec:org484f674}
+\label{sec:org57ed46d}
 
 Rekursion er helt simpelt, en funktion der kalder sig selv.
 Dette bliver brugt meget i funktionel programmering.
@@ -93,7 +93,7 @@ I min case har jeg anvendt fuldkommen funktionel psudo kode til at lave en model
 for hvordan jeg ville strukturere min implementering af Cooley-Tukey FFT algoritme.
 
 \subsection{Hvad er en Fourier transformation?}
-\label{sec:org3afa948}
+\label{sec:orgac1d97a}
 \newpage
 
 En Fourier transformation er en funktion der tager et polynomium, repræsenteret som en koefficient-vektor,
@@ -116,7 +116,7 @@ Her kan man altså se der ligger to top punkter lige omkring 10 og 25 på x-akse
 \bigskip
 
 \subsection{DFT}
-\label{sec:org9b43903}
+\label{sec:orge9946ef}
 DFT er kort for diskret fourier transformation, og var den originale formel opdaget af Joseph Fourier i 1830.
 Han fandt ud af, hvordan man kunne lave de her transformationer, før man kunne udregne dem på computere,
 eller havde nogen praktisk anvendelse til dem\footnote{\url{https://en.wikipedia.org/wiki/Joseph\_Fourier}}.
@@ -132,7 +132,7 @@ den kan se lidt skræmmende ud, men er nem nok at forstå når man lige har styr
 \bigskip
 
 \subsubsection{Komplekse tal og Euler's identitet}
-\label{sec:org9539adb}
+\label{sec:org2dedee7}
 
 Et komplekst tal er et tal bestående af en imaginær del og en reel del (summen af dem).
 Den imaginære del af det komplekse tal er defineret som produktet af et
@@ -179,7 +179,7 @@ Det betyder at hvis vi bytter \(k\) ud med \(i\), må \(e^{ix}\) bevæge sig mod
 Her vil en halv rotation derfor svare til \(x=\pi\) og vi kan derved konkludere at \(e^{\pi i} = -1\).
 
 \subsubsection{Uddybning af Fourier transformation}
-\label{sec:orgd0d8b77}
+\label{sec:org94b0cd0}
 
 Den inderste del af den diskrete fourier transformering kan ses lidt som et prik produkt
 $$
@@ -202,27 +202,67 @@ DFT algoritmen har en algoritmisk kompleksitet på \(O(n^2)\) der \(\hat{g}\) er
 \newpage
 
 \subsection{FFT}
-\label{sec:org2d2f572}
+\label{sec:org046b3bc}
 
-\subsubsection{Koefficient to værdi repræsentation}
-\label{sec:org254e09e}
+\subsubsection{Koefficient to punkt repræsentation}
+\label{sec:orgf8046f0}
+
+Fourier transformeringen svares ikke kun til en tids til frekvens domæne transformering,
+men også til en koefficient til punkt repræsentation,
+
+givet en bølge repræsenteret som en vektor af intensitet over tid
+$$
+b = [0, 1, 2, 3]
+$$
+
+vil kunne repræsenteres som et polynomium
+$$
+b(x) = x + 2\cdot x^2 + 3\cdot x^3
+$$
+
+her vil det gælde at
+$$
+\hat{b}(x) = b(i^x)
+$$
+
+\textbf{Eksempel med Julia:}
+\begin{verbatim}
+julia> f(x) = 2*x^2 + 3*x^3 + x
+f (generic function with 1 method)
+
+julia> for n in 0:4
+            println(f(im^n))
+       end
+ 6 + 0im
+-2 - 2im
+-2 + 0im
+-2 + 2im
+ 6 + 0im
+
+julia> fft([0, 1, 2, 3])
+4-element Vector{ComplexF64}:
+  6.0 + 0.0im
+ -2.0 + 2.0im
+ -2.0 + 0.0im
+ -2.0 - 2.0im
+\end{verbatim}
 
 Polynomier af en lige grad er spejlet om y-aksen.
 Polynomier af en ulige grad er spejlet om y-aksen og x-aksen.
 
 \begin{verbatim}
-plot(x^2) + plot(x^3, color='red')
+plot(x^2) + plot(x^3, color='red') + plot(x^4) + plot(x^5, color='red') + plot(x^6) + plot(x^7, color='red')
 \end{verbatim}
 
 \begin{center}
-\includegraphics[width=.9\linewidth]{/home/unic0rn9k/.sage/temp/unic0rn9k/714/tmp_7vxiwnr2.png}
+\includegraphics[width=.9\linewidth]{even_and_odd.png}
 \end{center}
 
 \subsubsection{Rekursion}
-\label{sec:org72cf811}
+\label{sec:org499e949}
 
 \section{Tooling (programmering)}
-\label{sec:org5d56d9f}
+\label{sec:orgf86f9ac}
 Jeg valgte at skrive koden til denne case i rust, da jeg er komfortabel med sproget,
 og gerne ville eksperimentere med at lave en hurtig implementering af Cooley-Tukey algoritmen.
 
@@ -236,15 +276,15 @@ da det betød jeg kunne smide nogen grafer ind, og have dem opdateret i næsten 
 mens jeg arbejdede på implementeringen af fft algoritmen.
 
 \subsection{Rust sprog paradimer}
-\label{sec:orgeafd531}
+\label{sec:org35ff6fc}
 Rust er et memory-safe programmeringssprog,
 hvilket betyder at det by-default ikke lader en skrive koder, der kan forudsige undefined-behavior\footnote{\url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}}
 
 \section{Inplace operationer og statisk allokering}
-\label{sec:org5b60235}
+\label{sec:org8ef4da7}
 
 \section{Bibliografi}
-\label{sec:orge27a4d6}
+\label{sec:org94e9cf1}
 
 1: Undefined-behavior - \url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}
 
@@ -256,7 +296,7 @@ hvilket betyder at det by-default ikke lader en skrive koder, der kan forudsige 
 
 
 \section{Bilag}
-\label{sec:orgc3ace50}
+\label{sec:orga72d1fe}
 
 Kode som pdf vedhæftet på næste side\ldots{}
 Grafer kan ikke vises i pdf'en, derfor anbefaler jeg at kigge på notebook'en linket til i toppen af dokumentet.

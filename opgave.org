@@ -158,7 +158,47 @@ DFT algoritmen har en algoritmisk kompleksitet på $O(n^2)$ der $\hat{g}$ er en 
 
 ** FFT
 
-*** Koefficient to værdi repræsentation
+*** Koefficient to punkt repræsentation
+
+Fourier transformeringen svares ikke kun til en tids til frekvens domæne transformering,
+men også til en koefficient til punkt repræsentation,
+
+givet en bølge repræsenteret som en vektor af intensitet over tid
+$$
+b = [0, 1, 2, 3]
+$$
+
+vil kunne repræsenteres som et polynomium
+$$
+b(x) = x + 2\cdot x^2 + 3\cdot x^3
+$$
+
+her vil det gælde at
+$$
+\hat{b}(x) = b(i^x)
+$$
+
+*Eksempel med Julia:*
+#+begin_src julia
+julia> f(x) = 2*x^2 + 3*x^3 + x
+f (generic function with 1 method)
+
+julia> for n in 0:4
+            println(f(im^n))
+       end
+ 6 + 0im
+-2 - 2im
+-2 + 0im
+-2 + 2im
+ 6 + 0im
+
+julia> fft([0, 1, 2, 3])
+4-element Vector{ComplexF64}:
+  6.0 + 0.0im
+ -2.0 + 2.0im
+ -2.0 + 0.0im
+ -2.0 - 2.0im
+#+end_src
 
 Polynomier af en lige grad er spejlet om y-aksen.
 Polynomier af en ulige grad er spejlet om y-aksen og x-aksen.
@@ -168,7 +208,7 @@ plot(x^2) + plot(x^3, color='red') + plot(x^4) + plot(x^5, color='red') + plot(x
 #+END_SRC
 
 #+RESULTS:
-[[file:/home/unic0rn9k/.sage/temp/unic0rn9k/714/tmp_azg5t_nx.png]]
+[[file:even_and_odd.png]]
 
 *** Rekursion
 
