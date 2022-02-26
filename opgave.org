@@ -1,7 +1,10 @@
+#+latex_header: \setlength{\parindent}{0pt}
+#+STARTUP: showall indent latexpreview entitiespretty
 #+TITLE: Virkeligt hurtige Fourier Transformationer
 
 #+LANGUAGE: da
 #+LATEX_HEADER: \usepackage[AUTO]{babel}
+#+LATEX_HEADER: \usepackage{pdfpages}
 
 #+OPTIONS: toc:nil
 #+options: date:nil
@@ -147,7 +150,25 @@ og derfor vil $f(t)$ være positiv hvis $g(t)$ også er negativ.
 $-2\pi$ sikre at en forøgelse af en tidsenhed svarende til en periode med frekvensen $f$ også vil resultere
 i en fuld rotation af $e^{-2\pi ift}$.
 
+\bigskip
+
+DFT algoritmen har en algoritmisk kompleksitet på $O(n^2)$ der $\hat{g}$ er en funktion af både tid og frekvens.
+
+\newpage
+
 ** FFT
+
+*** Koefficient to værdi repræsentation
+
+Polynomier af en lige grad er spejlet om y-aksen.
+Polynomier af en ulige grad er spejlet om y-aksen og x-aksen.
+
+#+BEGIN_SRC sage
+plot(x^2) + plot(x^3, color='red') + plot(x^4) + plot(x^5, color='red') + plot(x^6) + plot(x^7, color='red')
+#+END_SRC
+
+#+RESULTS:
+[[file:/home/unic0rn9k/.sage/temp/unic0rn9k/714/tmp_bpysx4q3.png]]
 
 *** Rekursion
 
@@ -173,9 +194,6 @@ hvilket betyder at det by-default ikke lader en skrive koder, der kan forudsige 
 
 * Inplace operationer og statisk allokering
 
-* Bilag
-[[./plot1.png]]
-
 * Bibliografi
 
 1: Undefined-behavior - https://doc.rust-lang.org/reference/behavior-considered-undefined.html
@@ -185,3 +203,11 @@ hvilket betyder at det by-default ikke lader en skrive koder, der kan forudsige 
 3: Fourier - https://en.wikipedia.org/wiki/Joseph_Fourier
 
 4: Euler's konstant - https://en.wikipedia.org/wiki/Euler%27s_constant
+
+
+* Bilag
+
+Kode som pdf vedhæftet på næste side...
+Grafer kan ikke vises i pdf'en, derfor anbefaler jeg at kigge på notebook'en linket til i toppen af dokumentet.
+
+\includepdf[pages=-]{notebook.pdf}

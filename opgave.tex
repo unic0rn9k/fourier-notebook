@@ -1,4 +1,4 @@
-% Created 2022-02-25 Fri 17:47
+% Created 2022-02-26 Sat 14:47
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
@@ -22,7 +22,9 @@
 \usepackage{lastpage}
 \definecolor{bg}{rgb}{0.95,0.95,0.95}
 \tolerance=1000
-            \usepackage[danish]{babel}
+            \setlength{\parindent}{0pt}
+\usepackage[danish]{babel}
+\usepackage{pdfpages}
 
 \linespread{1.1}
 \hypersetup{pdfborder=0 0 0}
@@ -60,9 +62,9 @@ github repo - \url{https://github.com/unic0nr9k/fourier-notebook}
 \newpage
 
 \section{Teori}
-\label{sec:org226d80c}
+\label{sec:org28993c2}
 \subsection{Rekursion og funktionel programmering}
-\label{sec:orge5784a7}
+\label{sec:org484f674}
 
 Rekursion er helt simpelt, en funktion der kalder sig selv.
 Dette bliver brugt meget i funktionel programmering.
@@ -91,7 +93,7 @@ I min case har jeg anvendt fuldkommen funktionel psudo kode til at lave en model
 for hvordan jeg ville strukturere min implementering af Cooley-Tukey FFT algoritme.
 
 \subsection{Hvad er en Fourier transformation?}
-\label{sec:orga5eb82b}
+\label{sec:org3afa948}
 \newpage
 
 En Fourier transformation er en funktion der tager et polynomium, repræsenteret som en koefficient-vektor,
@@ -114,7 +116,7 @@ Her kan man altså se der ligger to top punkter lige omkring 10 og 25 på x-akse
 \bigskip
 
 \subsection{DFT}
-\label{sec:org3737c4e}
+\label{sec:org9b43903}
 DFT er kort for diskret fourier transformation, og var den originale formel opdaget af Joseph Fourier i 1830.
 Han fandt ud af, hvordan man kunne lave de her transformationer, før man kunne udregne dem på computere,
 eller havde nogen praktisk anvendelse til dem\footnote{\url{https://en.wikipedia.org/wiki/Joseph\_Fourier}}.
@@ -130,7 +132,7 @@ den kan se lidt skræmmende ud, men er nem nok at forstå når man lige har styr
 \bigskip
 
 \subsubsection{Komplekse tal og Euler's identitet}
-\label{sec:org81c5dd9}
+\label{sec:org9539adb}
 
 Et komplekst tal er et tal bestående af en imaginær del og en reel del (summen af dem).
 Den imaginære del af det komplekse tal er defineret som produktet af et
@@ -177,30 +179,50 @@ Det betyder at hvis vi bytter \(k\) ud med \(i\), må \(e^{ix}\) bevæge sig mod
 Her vil en halv rotation derfor svare til \(x=\pi\) og vi kan derved konkludere at \(e^{\pi i} = -1\).
 
 \subsubsection{Uddybning af Fourier transformation}
-\label{sec:org30372c5}
+\label{sec:orgd0d8b77}
 
-Den innerste del af den diskrete fourier transformering kan ses lidt som et prik produkt
+Den inderste del af den diskrete fourier transformering kan ses lidt som et prik produkt
 $$
 f(t) = g(t) \cdot e ^{-2\pi ift}
 $$
 
-Her vil det virkelige komponent af \(f(t)\) være støre når intensiteten af \(g(t)\)
+Her vil det virkelige komponent af \(f(t)\) være større når intensiteten af \(g(t)\)
 matcher den der ville findes hvis frekvensen af \(g\) var \(f\).
 
 Dette kan intuitivt forstås, som at når \(t\) værdier ligger i bølgedale, vil \(e^{-2\pi ift}\) være negativ
 og derfor vil \(f(t)\) være positiv hvis \(g(t)\) også er negativ.
 
-\(-2\pi\) sikre at en øgelse af en tidsenhed svarende til en periode frekvensen \(f\) også vil resultere
+\(-2\pi\) sikre at en forøgelse af en tidsenhed svarende til en periode med frekvensen \(f\) også vil resultere
 i en fuld rotation af \(e^{-2\pi ift}\).
 
+\bigskip
+
+DFT algoritmen har en algoritmisk kompleksitet på \(O(n^2)\) der \(\hat{g}\) er en funktion af både tid og frekvens.
+
+\newpage
+
 \subsection{FFT}
-\label{sec:org54614df}
+\label{sec:org2d2f572}
+
+\subsubsection{Koefficient to værdi repræsentation}
+\label{sec:org254e09e}
+
+Polynomier af en lige grad er spejlet om y-aksen.
+Polynomier af en ulige grad er spejlet om y-aksen og x-aksen.
+
+\begin{verbatim}
+plot(x^2) + plot(x^3, color='red')
+\end{verbatim}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{/home/unic0rn9k/.sage/temp/unic0rn9k/714/tmp_7vxiwnr2.png}
+\end{center}
 
 \subsubsection{Rekursion}
-\label{sec:orgc7aa636}
+\label{sec:org72cf811}
 
 \section{Tooling (programmering)}
-\label{sec:orgac6c0cf}
+\label{sec:org5d56d9f}
 Jeg valgte at skrive koden til denne case i rust, da jeg er komfortabel med sproget,
 og gerne ville eksperimentere med at lave en hurtig implementering af Cooley-Tukey algoritmen.
 
@@ -214,21 +236,15 @@ da det betød jeg kunne smide nogen grafer ind, og have dem opdateret i næsten 
 mens jeg arbejdede på implementeringen af fft algoritmen.
 
 \subsection{Rust sprog paradimer}
-\label{sec:orgd957105}
+\label{sec:orgeafd531}
 Rust er et memory-safe programmeringssprog,
 hvilket betyder at det by-default ikke lader en skrive koder, der kan forudsige undefined-behavior\footnote{\url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}}
 
 \section{Inplace operationer og statisk allokering}
-\label{sec:org70a886b}
-
-\section{Bilag}
-\label{sec:org21df03c}
-\begin{center}
-\includegraphics[width=.9\linewidth]{./plot1.png}
-\end{center}
+\label{sec:org5b60235}
 
 \section{Bibliografi}
-\label{sec:org8999821}
+\label{sec:orge27a4d6}
 
 1: Undefined-behavior - \url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}
 
@@ -237,4 +253,13 @@ hvilket betyder at det by-default ikke lader en skrive koder, der kan forudsige 
 3: Fourier - \url{https://en.wikipedia.org/wiki/Joseph\_Fourier}
 
 4: Euler's konstant - \url{https://en.wikipedia.org/wiki/Euler\%27s\_constant}
+
+
+\section{Bilag}
+\label{sec:orgc3ace50}
+
+Kode som pdf vedhæftet på næste side\ldots{}
+Grafer kan ikke vises i pdf'en, derfor anbefaler jeg at kigge på notebook'en linket til i toppen af dokumentet.
+
+\includepdf[pages=-]{notebook.pdf}
 \end{document}
