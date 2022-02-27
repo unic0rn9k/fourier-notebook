@@ -245,8 +245,13 @@ $$
 f(-x_j) = f_{lige}(x^2_j) - x_j \cdot f_{ulige}(x^2_j)
 $$
 
+Her fra bliver $f$ delt op i lige og ulige koefficienter rekursivt indtil den skal evalueres på et punkt.
+
 For at kunne fortsætte herfra skal vi kunne generare $n$ tal, der alle giver 1 når de bliver opløftet i $n$'de.
 (Her vil $n$ altid være $2^{noget}$)
+
+For at kunne skal vi finde et sæt af unikke $x$ værdier der kan opløftes i $2^n$ og stadig give et positivt og negativt par.
+Her er der nogen specielle tal der hedder the n'th roots of unity, der opfylder disse krav.
 
 *n'th root of unity:*
 $$
@@ -254,7 +259,7 @@ $$
 $$
 
 $$
--\omega^j = \omega^{j+\frac{n}{2}}
+-\omega_n^j = \omega_n^{j+\frac{n}{2}}
 $$
 
 $$
@@ -272,7 +277,7 @@ men også rust's brug af zero-cost-abstractions.
 
 Jeg valgte at skrive koden i en jupyter notebook, da jeg ikke havde nogen egentlig
 applikation af min kode i tankerne under forløbet.
-Det viste sig også at være super praktisk til at lave tdd (test-driven-developement),
+Det viste sig også at være super praktisk til at lave TDD (test driven development),
 da det betød jeg kunne smide nogen grafer ind, og have dem opdateret i næsten realtime,
 mens jeg arbejdede på implementeringen af fft algoritmen.
 
@@ -295,7 +300,7 @@ men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere
 
 * Inplace operationer og statisk allokering
 
-
+* Twiddle factor
 
 * Bibliografi
 
