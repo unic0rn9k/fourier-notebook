@@ -1,4 +1,4 @@
-% Created 2022-02-26 Sat 16:57
+% Created 2022-02-27 Sun 13:38
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
@@ -62,9 +62,9 @@ github repo - \url{https://github.com/unic0nr9k/fourier-notebook}
 \newpage
 
 \section{Teori}
-\label{sec:orgb9702bb}
+\label{sec:orge6337b8}
 \subsection{Rekursion og funktionel programmering}
-\label{sec:org6855d40}
+\label{sec:org9b9254f}
 
 Rekursion er helt simpelt, en funktion der kalder sig selv.
 Dette bliver brugt meget i funktionel programmering.
@@ -93,7 +93,7 @@ I min case har jeg anvendt fuldkommen funktionel psudo kode til at lave en model
 for hvordan jeg ville strukturere min implementering af Cooley-Tukey FFT algoritme.
 
 \subsection{Hvad er en Fourier transformation?}
-\label{sec:org6709e9d}
+\label{sec:org3bc7732}
 \newpage
 
 En Fourier transformation er en funktion der tager et polynomium, repræsenteret som en koefficient-vektor,
@@ -116,7 +116,7 @@ Her kan man altså se der ligger to top punkter lige omkring 10 og 25 på x-akse
 \bigskip
 
 \subsection{DFT}
-\label{sec:org3c45ed2}
+\label{sec:org5f98669}
 DFT er kort for diskret fourier transformation, og var den originale formel opdaget af Joseph Fourier i 1830.
 Han fandt ud af, hvordan man kunne lave de her transformationer, før man kunne udregne dem på computere,
 eller havde nogen praktisk anvendelse til dem\footnote{\url{https://en.wikipedia.org/wiki/Joseph\_Fourier}}.
@@ -132,7 +132,7 @@ den kan se lidt skræmmende ud, men er nem nok at forstå når man lige har styr
 \bigskip
 
 \subsubsection{Komplekse tal og Euler's identitet}
-\label{sec:orgf9dd12a}
+\label{sec:orgb0afb63}
 
 Et komplekst tal er et tal bestående af en imaginær del og en reel del (summen af dem).
 Den imaginære del af det komplekse tal er defineret som produktet af et
@@ -179,7 +179,7 @@ Det betyder at hvis vi bytter \(k\) ud med \(i\), må \(e^{ix}\) bevæge sig mod
 Her vil en halv rotation derfor svare til \(x=\pi\) og vi kan derved konkludere at \(e^{\pi i} = -1\).
 
 \subsubsection{Uddybning af Fourier transformation}
-\label{sec:org3ae9cfd}
+\label{sec:org4739d10}
 
 Den inderste del af den diskrete fourier transformering kan ses lidt som et prik produkt
 $$
@@ -202,10 +202,10 @@ DFT algoritmen har en algoritmisk kompleksitet på \(O(n^2)\) der \(\hat{g}\) er
 \newpage
 
 \subsection{FFT}
-\label{sec:orgcab19d0}
+\label{sec:orgef4ee02}
 
 \subsubsection{Koefficient to punkt repræsentation}
-\label{sec:orgeddb89e}
+\label{sec:orgf2e4e7c}
 
 Fourier transformeringen svares ikke kun til en tids til frekvens domæne transformering,
 men også til en koefficient til punkt repræsentation,
@@ -246,7 +246,7 @@ julia> fft([0, 1, 2, 3])
  -2.0 - 2.0im
 \end{verbatim}
 
-I eksemplet over kan man tydeligt see \(O(n^2)\) kompleksiteten,
+I eksemplet over kan man tydeligt se \(O(n^2)\) kompleksiteten,
 der funktionen \(b\) har \(n\) der skal udregnes,
 og \(b\) sig selv skal også computeres \(n\) gange.
 
@@ -261,11 +261,44 @@ plot(x^2) + plot(x^3, color='red') + plot(x^4) + plot(x^5, color='red') + plot(x
 \includegraphics[width=.9\linewidth]{even_and_odd.png}
 \end{center}
 
+Vi kan udnytte den egenskab af polynomier ved at splitte vores polynomium op i ulige og lige led
+og derved evaluer polynomiet på mindre punkter.
+
+\textbf{Eksempel:}
+$$
+f(x) = (3x^2 + 4x^3 + 2x^4 + x^5) = (3x^2 + 2x^4) + x(4x^2 + x^4)
+$$
+
+$$
+f_{lige}(x^2) = 3x + 2x^2
+$$
+
+$$
+f_{ulige}(x^2) = 4x + x^2
+$$
+
+Bemærk at graden af alle ledn'e er divideret med 2 og en er trukket fra graden af det ulige polynomium.
+Dette gør at vektor repræsentationen af \(f_{lige}\) og \(f_{ulige}\) vil svares til alle de lige/ulige værdier fra \(\vec{f}\),
+samlet i nye vektorer. Her vil længden af \({\vec{f_{lige}}}\) og \({\vec{f_{lige}}}\) altså være \(n/2\), hvor \(n\) er længden af \(\vec{f}\).
+(Her betyder længde mængden af elementer i vektoren, og ikke afstanden mellem origo og vektorens spids)
+
+$$
+f(x) = f_{lige}(x^2) + x \cdot f_{ulige}(x^2)
+$$
+
+$$
+f(x_i) = f_{lige}(x^2_i) + x_i \cdot f_{ulige}(x^2_i)
+$$
+
+$$
+f(-x_i) = f_{lige}(x^2_i) - x_i \cdot f_{ulige}(x^2_i)
+$$
+
 \subsubsection{Rekursion}
-\label{sec:orgfa873a3}
+\label{sec:orgc637dcd}
 
 \section{Tooling (programmering)}
-\label{sec:orgc753127}
+\label{sec:org61f8cf4}
 Jeg valgte at skrive koden til denne case i rust, da jeg er komfortabel med sproget,
 og gerne ville eksperimentere med at lave en hurtig implementering af Cooley-Tukey algoritmen.
 
@@ -279,15 +312,28 @@ da det betød jeg kunne smide nogen grafer ind, og have dem opdateret i næsten 
 mens jeg arbejdede på implementeringen af fft algoritmen.
 
 \subsection{Rust sprog paradimer}
-\label{sec:orgffa3d81}
+\label{sec:org2480af4}
 Rust er et memory-safe programmeringssprog,
-hvilket betyder at det by-default ikke lader en skrive koder, der kan forudsige undefined-behavior\footnote{\url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}}
+hvilket betyder at det by-default ikke lader en skrive koder, der kan resultere i undefined-behavior\footnote{\url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}}.
+Dette betyder at rust har en borrow-checker der ikke lader ens kode compile hvis det bryder nogen regler defineret i rust sprog specifikationerne.
+Man kan for eksempel ikke bruge en reference i flere funktioner på en gang, og alle værdier skal makkeres med
+en mutability specificer, der bestemmer om man kan ændre på den. Derudover introducere rust også et koncept der hedder lifetimes,
+som kort sagt betyder at kompileren sikre at man ikke kan bruge references til værdier der er blevet deallokeret.
+
+\bigskip
+
+Disse regler er ikke absolutte. Man kan makkere kode som `unsafe` for at slippe uden om reglerne introduceret af compileren.
+
+I min kode har jeg for eksempel valgt at lave en meget unsafe implementering af fft algoritmen,
+men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere undefined behavior i sin kode ved brug af min algoritme.
 
 \section{Inplace operationer og statisk allokering}
-\label{sec:org7ad1192}
+\label{sec:orgdbb4489}
+
+
 
 \section{Bibliografi}
-\label{sec:orgc7f9d28}
+\label{sec:org5c13791}
 
 1: Undefined-behavior - \url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}
 
@@ -299,7 +345,7 @@ hvilket betyder at det by-default ikke lader en skrive koder, der kan forudsige 
 
 
 \section{Bilag}
-\label{sec:org593822a}
+\label{sec:org499d1ca}
 
 Kode som pdf vedhæftet på næste side\ldots{}
 Grafer kan ikke vises i pdf'en, derfor anbefaler jeg at kigge på notebook'en linket til i toppen af dokumentet.

@@ -199,7 +199,7 @@ julia> fft([0, 1, 2, 3])
  -2.0 - 2.0im
 #+end_src
 
-I eksemplet over kan man tydeligt see $O(n^2)$ kompleksiteten,
+I eksemplet over kan man tydeligt se $O(n^2)$ kompleksiteten,
 der funktionen $b$ har $n$ der skal udregnes,
 og $b$ sig selv skal også computeres $n$ gange.
 
@@ -212,6 +212,54 @@ plot(x^2) + plot(x^3, color='red') + plot(x^4) + plot(x^5, color='red') + plot(x
 
 #+RESULTS:
 [[file:even_and_odd.png]]
+
+Vi kan udnytte den egenskab af polynomier ved at splitte vores polynomium op i ulige og lige led
+og derved evaluer polynomiet på mindre punkter.
+
+*Eksempel:*
+$$
+f(x) = (3x^2 + 4x^3 + 2x^4 + x^5) = (3x^2 + 2x^4) + x(4x^2 + x^4)
+$$
+
+$$
+f_{lige}(x^2) = 3x + 2x^2
+$$
+
+$$
+f_{ulige}(x^2) = 4x + x^2
+$$
+
+Bemærk at graden af alle ledn'e er divideret med 2 og en er trukket fra graden af det ulige polynomium.
+Dette gør at vektor repræsentationen af $f_{lige}$ og $f_{ulige}$ vil svares til alle de lige/ulige værdier fra $\vec{f}$,
+samlet i nye vektorer. Her vil længden af ${\vec{f_{lige}}}$ og ${\vec{f_{lige}}}$ altså være $n/2$, hvor $n$ er længden af $\vec{f}$.
+(Her betyder længde mængden af elementer i vektoren, og ikke afstanden mellem origo og vektorens spids)
+
+$$
+f(x) = f_{lige}(x^2) + x \cdot f_{ulige}(x^2)
+$$
+
+For negative x-værdier, er det altså kun $f_{ulige}$ der skal sættes i minus,
+der de lige er spejlet om y-aksen.
+
+$$
+f(-x_j) = f_{lige}(x^2_j) - x_j \cdot f_{ulige}(x^2_j)
+$$
+
+For at kunne fortsætte herfra skal vi kunne generare $n$ tal, der alle giver 1 når de bliver opløftet i $n$'de.
+(Her vil $n$ altid være $2^{noget}$)
+
+*n'th root of unity:*
+$$
+\omega_n = e^{\frac{2\pi i}{n}}
+$$
+
+$$
+-\omega^j = \omega^{j+\frac{n}{2}}
+$$
+
+$$
+\omega_n^2 = \omega_{\frac{n}{2}}
+$$
 
 *** Rekursion
 
@@ -230,12 +278,24 @@ mens jeg arbejdede på implementeringen af fft algoritmen.
 
 ** Rust sprog paradimer
 Rust er et memory-safe programmeringssprog,
-hvilket betyder at det by-default ikke lader en skrive koder, der kan forudsige undefined-behavior[fn:1]
+hvilket betyder at det by-default ikke lader en skrive koder, der kan resultere i undefined-behavior[fn:1].
+Dette betyder at rust har en borrow-checker der ikke lader ens kode compile hvis det bryder nogen regler defineret i rust sprog specifikationerne.
+Man kan for eksempel ikke bruge en reference i flere funktioner på en gang, og alle værdier skal makkeres med
+en mutability specificer, der bestemmer om man kan ændre på den. Derudover introducere rust også et koncept der hedder lifetimes,
+som kort sagt betyder at kompileren sikre at man ikke kan bruge references til værdier der er blevet deallokeret.
 
+\bigskip
+
+Disse regler er ikke absolutte. Man kan makkere kode som `unsafe` for at slippe uden om reglerne introduceret af compileren.
+
+I min kode har jeg for eksempel valgt at lave en meget unsafe implementering af fft algoritmen,
+men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere undefined behavior i sin kode ved brug af min algoritme.
 
 [fn:1] https://doc.rust-lang.org/reference/behavior-considered-undefined.html
 
 * Inplace operationer og statisk allokering
+
+
 
 * Bibliografi
 
