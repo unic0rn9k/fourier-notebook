@@ -1,6 +1,6 @@
 #+latex_header: \setlength{\parindent}{0pt}
 #+STARTUP: showall indent latexpreview entitiespretty
-#+TITLE: Virkeligt hurtige Fourier Transformationer
+#+TITLE: Virkeligt Hurtige Fourier Transformationer
 
 #+LANGUAGE: da
 #+LATEX_HEADER: \usepackage[AUTO]{babel}
@@ -165,7 +165,7 @@ men også til en koefficient til punkt repræsentation,
 
 givet en bølge repræsenteret som en vektor af intensitet over tid
 $$
-b = [0, 1, 2, 3]
+\vec{b} = [0, 1, 2, 3]
 $$
 
 vil kunne repræsenteres som et polynomium
@@ -200,7 +200,7 @@ julia> fft([0, 1, 2, 3])
 #+end_src
 
 I eksemplet over kan man tydeligt se $O(n^2)$ kompleksiteten,
-der funktionen $b$ har $n$ der skal udregnes,
+der funktionen $b$ har $n$ led der skal udregnes,
 og $b$ sig selv skal også computeres $n$ gange.
 
 Polynomier af en lige grad er spejlet om y-aksen.
