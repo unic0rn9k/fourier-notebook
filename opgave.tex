@@ -1,4 +1,4 @@
-% Created 2022-02-28 Mon 00:52
+% Created 2022-03-01 Tue 18:39
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
@@ -37,10 +37,10 @@
 \rfoot{Page \thepage \hspace{1pt} of \pageref{LastPage}}
 \author{Aksel Mannstaedt}
 \date{}
-\title{Virkeligt hurtige Fourier Transformationer}
+\title{Virkeligt Hurtige Fourier Transformationer}
 \hypersetup{
  pdfauthor={Aksel Mannstaedt},
- pdftitle={Virkeligt hurtige Fourier Transformationer},
+ pdftitle={Virkeligt Hurtige Fourier Transformationer},
  pdfkeywords={},
  pdfsubject={},
  pdfcreator={Emacs 29.0.50 (Org mode 9.6)}, 
@@ -62,9 +62,9 @@ github repo - \url{https://github.com/unic0nr9k/fourier-notebook}
 \newpage
 
 \section{Teori}
-\label{sec:org2d93053}
+\label{sec:org306180a}
 \subsection{Rekursion og funktionel programmering}
-\label{sec:org2478e79}
+\label{sec:orga50635b}
 
 Rekursion er helt simpelt, en funktion der kalder sig selv.
 Dette bliver brugt meget i funktionel programmering.
@@ -93,12 +93,15 @@ I min case har jeg anvendt fuldkommen funktionel psudo kode til at lave en model
 for hvordan jeg ville strukturere min implementering af Cooley-Tukey FFT algoritme.
 
 \subsection{Hvad er en Fourier transformation?}
-\label{sec:org0031a04}
+\label{sec:orged206c0}
 \newpage
 
-En Fourier transformation er en funktion der tager et polynomium, repræsenteret som en koefficient-vektor,
-og transformerer den til en punkt-vektor repræsentation. Dette bliver også kaldt for en time to frequency -domain transformation,
-da den også kan repræsenteres som en transformation af bølger repræsenteret som intensitet over tid til intensitet over frekvens.
+En Fourier transformation er en vektor transformation (der i øvrigt også kan udvides til n-dimensionelle tensore)
+der blandt andet kan anvendes til at transformere et polynomium,
+repræsenteret som en koefficient-vektor, til en punkt-vektor repræsentation.
+Dette er også ækvivalent til en time to frequency -domain transformation.
+Altså den også kan anvendes som en transformation af bølger repræsenteret som intensitet over tid til intensitet over frekvens.
+Her vil jeg lige pointere at alle disse operationer er ækvivalente, altså det er bare forskellige måder at repræsentere, tænke på og visualizere den samme transformation.
 Jeg vil primært fokusere på bølge repræsentationen af fourier transformationen, der jeg synes den er lidt nemmere at forstå.
 
 Her er som eksempel en bølge og dens tilhørende fourier transformation.
@@ -116,7 +119,7 @@ Her kan man altså se der ligger to top punkter lige omkring 10 og 25 på x-akse
 \bigskip
 
 \subsection{DFT}
-\label{sec:org2ea4dca}
+\label{sec:orgeac61fa}
 DFT er kort for diskret fourier transformation, og var den originale formel opdaget af Joseph Fourier i 1830.
 Han fandt ud af, hvordan man kunne lave de her transformationer, før man kunne udregne dem på computere,
 eller havde nogen praktisk anvendelse til dem\footnote{\url{https://en.wikipedia.org/wiki/Joseph\_Fourier}}.
@@ -132,7 +135,7 @@ den kan se lidt skræmmende ud, men er nem nok at forstå når man lige har styr
 \bigskip
 
 \subsubsection{Komplekse tal og Euler's identitet}
-\label{sec:orgdb667f8}
+\label{sec:org3bda14e}
 
 Et komplekst tal er et tal bestående af en imaginær del og en reel del (summen af dem).
 Den imaginære del af det komplekse tal er defineret som produktet af et
@@ -179,7 +182,7 @@ Det betyder at hvis vi bytter \(k\) ud med \(i\), må \(e^{ix}\) bevæge sig mod
 Her vil en halv rotation derfor svare til \(x=\pi\) og vi kan derved konkludere at \(e^{\pi i} = -1\).
 
 \subsubsection{Uddybning af Fourier transformation}
-\label{sec:org6563b4c}
+\label{sec:org1336440}
 
 Den inderste del af den diskrete fourier transformering kan ses lidt som et prik produkt
 $$
@@ -202,17 +205,17 @@ DFT algoritmen har en algoritmisk kompleksitet på \(O(n^2)\) der \(\hat{g}\) er
 \newpage
 
 \subsection{FFT}
-\label{sec:orgc893f47}
+\label{sec:orgb37ebc2}
 
 \subsubsection{Koefficient to punkt repræsentation}
-\label{sec:org009fbc6}
+\label{sec:org77c1d39}
 
 Fourier transformeringen svares ikke kun til en tids til frekvens domæne transformering,
 men også til en koefficient til punkt repræsentation,
 
 givet en bølge repræsenteret som en vektor af intensitet over tid
 $$
-b = [0, 1, 2, 3]
+\vec{b} = [0, 1, 2, 3]
 $$
 
 vil kunne repræsenteres som et polynomium
@@ -247,7 +250,7 @@ julia> fft([0, 1, 2, 3])
 \end{verbatim}
 
 I eksemplet over kan man tydeligt se \(O(n^2)\) kompleksiteten,
-der funktionen \(b\) har \(n\) der skal udregnes,
+der funktionen \(b\) har \(n\) led der skal udregnes,
 og \(b\) sig selv skal også computeres \(n\) gange.
 
 Polynomier af en lige grad er spejlet om y-aksen.
@@ -296,7 +299,7 @@ $$
 Her fra bliver \(f\) delt op i lige og ulige koefficienter rekursivt indtil den skal evalueres på et punkt.
 
 For at kunne fortsætte herfra skal vi kunne generare \(n\) tal, der alle giver 1 når de bliver opløftet i \(n\)'de.
-(Her vil \(n\) altid være \(2^{noget}\))
+(Her skal \(n\) altid være \(2^{noget}\), for at den rekursive algoritme virker)
 
 For at kunne skal vi finde et sæt af unikke \(x\) værdier der kan opløftes i \(2^n\) og stadig give et positivt og negativt par.
 Her er der nogen specielle tal der hedder the n'th roots of unity, der opfylder disse krav.
@@ -314,11 +317,21 @@ $$
 \omega_n^2 = \omega_{\frac{n}{2}}
 $$
 
-\subsubsection{Rekursion}
-\label{sec:org7378466}
+altså kan vi skrive fourier transformeringen op som
+
+$$
+f(\omega_j) = lige_j + \omega_j \cdot ulige_j
+$$
+$$
+f(-\omega_j) = lige_j - \omega_j \cdot ulige_j
+$$
+
+$$
+lige_j = f(\omega_\frac{n}{2})
+$$
 
 \section{Tooling (programmering)}
-\label{sec:orge8f4699}
+\label{sec:org28f6ed2}
 Jeg valgte at skrive koden til denne case i rust, da jeg er komfortabel med sproget,
 og gerne ville eksperimentere med at lave en hurtig implementering af Cooley-Tukey algoritmen.
 
@@ -332,7 +345,7 @@ da det betød jeg kunne smide nogen grafer ind, og have dem opdateret i næsten 
 mens jeg arbejdede på implementeringen af fft algoritmen.
 
 \subsection{Rust sprog paradimer}
-\label{sec:org095d4ac}
+\label{sec:org2ddd545}
 Rust er et memory-safe programmeringssprog,
 hvilket betyder at det by-default ikke lader en skrive koder, der kan resultere i undefined-behavior\footnote{\url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}}.
 Dette betyder at rust har en borrow-checker der ikke lader ens kode compile hvis det bryder nogen regler defineret i rust sprog specifikationerne.
@@ -348,13 +361,13 @@ I min kode har jeg for eksempel valgt at lave en meget unsafe implementering af 
 men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere undefined behavior i sin kode ved brug af min algoritme.
 
 \section{Inplace operationer og statisk allokering}
-\label{sec:orga622220}
+\label{sec:orge890615}
 
 \section{Twiddle factor}
-\label{sec:org50f60b0}
+\label{sec:orgce4c477}
 
 \section{Bibliografi}
-\label{sec:org0971c1c}
+\label{sec:orgd48cad2}
 
 1: Undefined-behavior - \url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}
 
@@ -366,7 +379,7 @@ men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere
 
 
 \section{Bilag}
-\label{sec:orgd79e40d}
+\label{sec:orgc2164b3}
 
 Kode som pdf vedhæftet på næste side\ldots{}
 Grafer kan ikke vises i pdf'en, derfor anbefaler jeg at kigge på notebook'en linket til i toppen af dokumentet.

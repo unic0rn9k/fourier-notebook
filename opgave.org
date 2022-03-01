@@ -35,7 +35,7 @@ Fordele ved funktionelle programmeringssprog er at de er designet til at formind
 og derved uforudventet adfærd.
 Side effects er defineret som en operation der muterer data udenfor den funktion der ejer data'en.
 Dette vil altså siges, at hvis man har en funktion der tager en pointer til en værdi og så ændrer på
-den værdi via pointeren, vil det være en side effect af funktionen.
+den værdi via pointeren, vil det være en side effekt af funktionen.
 
 Dette kan skabe uforudventet adfærd i et program og vil derfor typisk gerne undgås.
 
@@ -54,23 +54,26 @@ for hvordan jeg ville strukturere min implementering af Cooley-Tukey FFT algorit
 ** Hvad er en Fourier transformation?
 \newpage
 
-En Fourier transformation er en funktion der tager et polynomium, repræsenteret som en koefficient-vektor,
-og transformerer den til en punkt-vektor repræsentation. Dette bliver også kaldt for en time to frequency -domain transformation,
-da den også kan repræsenteres som en transformation af bølger repræsenteret som intensitet over tid til intensitet over frekvens.
-Jeg vil primært fokusere på bølge repræsentationen af fourier transformationen, der jeg synes den er lidt nemmere at forstå.
+En Fourier transformation er en vektor transformation (der i øvrigt også kan udvides til n-dimensionelle tensore)
+der blandt andet kan anvendes til at transformere et polynomium,
+repræsenteret som en koefficient-vektor, til en punkt-vektor repræsentation.
+Dette er også ækvivalent til en time to frequency -domain transformation.
+Altså den også kan anvendes som en transformation af bølger repræsenteret som intensitet over tid til intensitet over frekvens.
+Her vil jeg lige pointere at alle disse operationer er ækvivalente, altså det er bare forskellige måder at repræsentere, tænke på og visualizere den samme transformation.
+Jeg vil primært fokusere på bølge repræsentationen af Fourier transformationen, der jeg synes den er lidt nemmere at forstå.
 
-Her er som eksempel en bølge og dens tilhørende fourier transformation.
-Bølgen er en kombination af en 10Hz bølge og en 25Hz bølge.
+Her er som eksempel en bølge og dens tilhørende Fourier transformation.
+Bølgen er en kombination af en 7, 14 og 19 hertz bølge.
 
 [[./source_plot2.png]]
 
-Her kan man altså se der ligger to top punkter lige omkring 10 og 25 på x-aksen.
+Her kan man altså se der ligger lokale maksimal punkter lige omkring 7, 14 og 19 på x-aksen.
 [[./plot2.png]]
 
 \bigskip
 
 ** DFT
-DFT er kort for diskret fourier transformation, og var den originale formel opdaget af Joseph Fourier i 1830.
+DFT er kort for diskret Fourier transformation, og var den originale formel opdaget af Joseph Fourier i 1830.
 Han fandt ud af, hvordan man kunne lave de her transformationer, før man kunne udregne dem på computere,
 eller havde nogen praktisk anvendelse til dem[fn:3].
 
@@ -79,7 +82,7 @@ $$
 \hat{g}(f) = \int_{+\infin}^{-\infin{}} g(t) \cdot e ^{-2\pi ift}dt
 $$
 
-Formlen ovenfor viser hvordan en diskret fourier transformation kan udregnes,
+Formlen ovenfor viser hvordan en diskret Fourier transformation kan udregnes,
 den kan se lidt skræmmende ud, men er nem nok at forstå når man lige har styr på et par koncepter indenfor matematik.
 
 \bigskip
@@ -117,7 +120,7 @@ osv...
 
 \newpage
 
-For at kunne forstå fourier transformeringer er det vigtigt at forstå Euler's identitet,
+For at kunne forstå Fourier transformeringer er det vigtigt at forstå Euler's identitet,
 som er defineret som
 
 $$
@@ -136,7 +139,7 @@ Her vil en halv rotation derfor svare til $x=\pi$ og vi kan derved konkludere at
 
 *** Uddybning af Fourier transformation
 
-Den inderste del af den diskrete fourier transformering kan ses lidt som et prik produkt
+Den inderste del af den diskrete Fourier transformering kan ses lidt som et prik produkt
 $$
 f(t) = g(t) \cdot e ^{-2\pi ift}
 $$
@@ -248,7 +251,7 @@ $$
 Her fra bliver $f$ delt op i lige og ulige koefficienter rekursivt indtil den skal evalueres på et punkt.
 
 For at kunne fortsætte herfra skal vi kunne generare $n$ tal, der alle giver 1 når de bliver opløftet i $n$'de.
-(Her vil $n$ altid være $2^{noget}$)
+(Her skal $n$ altid være $2^{noget}$, for at den rekursive algoritme virker)
 
 For at kunne skal vi finde et sæt af unikke $x$ værdier der kan opløftes i $2^n$ og stadig give et positivt og negativt par.
 Her er der nogen specielle tal der hedder the n'th roots of unity, der opfylder disse krav.
@@ -266,7 +269,18 @@ $$
 \omega_n^2 = \omega_{\frac{n}{2}}
 $$
 
-*** Rekursion
+altså kan vi skrive Fourier transformeringen op som
+
+$$
+f(\omega_j) = lige_j + \omega_j \cdot ulige_j
+$$
+$$
+f(-\omega_j) = lige_j - \omega_j \cdot ulige_j
+$$
+
+$$
+lige_j = f(\omega_\frac{n}{2})
+$$
 
 * Tooling (programmering)
 Jeg valgte at skrive koden til denne case i rust, da jeg er komfortabel med sproget,
@@ -279,12 +293,12 @@ Jeg valgte at skrive koden i en jupyter notebook, da jeg ikke havde nogen egentl
 applikation af min kode i tankerne under forløbet.
 Det viste sig også at være super praktisk til at lave TDD (test driven development),
 da det betød jeg kunne smide nogen grafer ind, og have dem opdateret i næsten realtime,
-mens jeg arbejdede på implementeringen af fft algoritmen.
+mens jeg arbejdede på implementeringen af FFT algoritmen.
 
 ** Rust sprog paradimer
 Rust er et memory-safe programmeringssprog,
 hvilket betyder at det by-default ikke lader en skrive koder, der kan resultere i undefined-behavior[fn:1].
-Dette betyder at rust har en borrow-checker der ikke lader ens kode compile hvis det bryder nogen regler defineret i rust sprog specifikationerne.
+Dette betyder at rust har en borrow-checker der ikke lader ens kode compile' hvis det bryder nogen regler defineret i rust sprog specifikationerne.
 Man kan for eksempel ikke bruge en reference i flere funktioner på en gang, og alle værdier skal makkeres med
 en mutability specificer, der bestemmer om man kan ændre på den. Derudover introducere rust også et koncept der hedder lifetimes,
 som kort sagt betyder at kompileren sikre at man ikke kan bruge references til værdier der er blevet deallokeret.
@@ -293,7 +307,7 @@ som kort sagt betyder at kompileren sikre at man ikke kan bruge references til v
 
 Disse regler er ikke absolutte. Man kan makkere kode som `unsafe` for at slippe uden om reglerne introduceret af compileren.
 
-I min kode har jeg for eksempel valgt at lave en meget unsafe implementering af fft algoritmen,
+I min kode har jeg for eksempel valgt at lave en meget unsafe implementering af FFT algoritmen,
 men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere undefined behavior i sin kode ved brug af min algoritme.
 
 [fn:1] https://doc.rust-lang.org/reference/behavior-considered-undefined.html
