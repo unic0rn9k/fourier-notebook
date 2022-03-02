@@ -63,7 +63,7 @@ Her vil jeg lige pointere at alle disse operationer er ækvivalente, altså det 
 Jeg vil primært fokusere på bølge repræsentationen af Fourier transformationen, der jeg synes den er lidt nemmere at forstå.
 
 Her er som eksempel en bølge og dens tilhørende Fourier transformation.
-Bølgen er en kombination af en 7, 14 og 19 hertz bølge.
+Bølgen er en kombination af en 7, 14 og 19 frekvens bølge (Frekvensen er enhedsløs der den er bølge længde over vektorens længde).
 
 [[./source_plot2.png]]
 
@@ -153,6 +153,10 @@ og derfor vil $f(t)$ være positiv hvis $g(t)$ også er negativ.
 $-2\pi$ sikre at en forøgelse af en tidsenhed svarende til en periode med frekvensen $f$ også vil resultere
 i en fuld rotation af $e^{-2\pi ift}$.
 
+Det skal være et integrale for at sikre at frekvensen matcher over en længere periode.
+Altså hvis man ikke brugte integralet,
+ville enkelte punkter der matcher dem fra frekvensen $f$ også resultere i en høj værdi på $\hat{g}(f)$.
+
 \bigskip
 
 DFT algoritmen har en algoritmisk kompleksitet på $O(n^2)$ der $\hat{g}$ er en funktion af både tid og frekvens.
@@ -181,7 +185,7 @@ $$
 \hat{b}(x) = b((-i)^x)
 $$
 
-*Eksempel med Julia:*
+*DFT eksempel med Julia:*
 #+begin_src julia
 julia> b(x) = 2*x^2 + 3*x^3 + x
 b (generic function with 1 method)
@@ -203,7 +207,7 @@ julia> fft([0, 1, 2, 3])
 #+end_src
 
 I eksemplet over kan man tydeligt se $O(n^2)$ kompleksiteten,
-der funktionen $b$ har $n$ led der skal udregnes,
+der funktionen $b$, har $n$ led der skal udregnes
 og $b$ sig selv skal også computeres $n$ gange.
 
 Polynomier af en lige grad er spejlet om y-aksen.
@@ -213,6 +217,7 @@ Polynomier af en ulige grad er spejlet om y-aksen og x-aksen.
 plot(x^2) + plot(x^3, color='red') + plot(x^4) + plot(x^5, color='red') + plot(x^6) + plot(x^7, color='red')
 #+END_SRC
 
+#+caption: Lavet med sagemath
 #+RESULTS:
 [[file:even_and_odd.png]]
 
@@ -225,17 +230,16 @@ f(x) = (3x^2 + 4x^3 + 2x^4 + x^5) = (3x^2 + 2x^4) + x(4x^2 + x^4)
 $$
 
 $$
-f_{lige}(x^2) = 3x + 2x^2
+f_{lige}(x) = 3x + 2x^2
 $$
 
 $$
-f_{ulige}(x^2) = 4x + x^2
+f_{ulige}(x) = 4x + x^2
 $$
 
 Bemærk at graden af alle ledn'e er divideret med 2 og en er trukket fra graden af det ulige polynomium.
 Dette gør at vektor repræsentationen af $f_{lige}$ og $f_{ulige}$ vil svares til alle de lige/ulige værdier fra $\vec{f}$,
-samlet i nye vektorer. Her vil længden af ${\vec{f_{lige}}}$ og ${\vec{f_{lige}}}$ altså være $n/2$, hvor $n$ er længden af $\vec{f}$.
-(Her betyder længde mængden af elementer i vektoren, og ikke afstanden mellem origo og vektorens spids)
+samlet i nye vektorer. Her vil dimensionen af ${\vec{f_{lige}}}$ og ${\vec{f_{lige}}}$ altså være $n/2$, hvor $n$ er dimensionen af $\vec{f}$.
 
 $$
 f(x) = f_{lige}(x^2) + x \cdot f_{ulige}(x^2)
@@ -245,7 +249,7 @@ For negative x-værdier, er det altså kun $f_{ulige}$ der skal sættes i minus,
 der de lige er spejlet om y-aksen.
 
 $$
-f(-x_j) = f_{lige}(x^2_j) - x_j \cdot f_{ulige}(x^2_j)
+f(-x) = f_{lige}(x^2) - x \cdot f_{ulige}(x^2)
 $$
 
 Her fra bliver $f$ delt op i lige og ulige koefficienter rekursivt indtil den skal evalueres på et punkt.
@@ -257,6 +261,10 @@ For at kunne skal vi finde et sæt af unikke $x$ værdier der kan opløftes i $2
 Her er der nogen specielle tal der hedder the n'th roots of unity, der opfylder disse krav.
 
 *n'th root of unity:*
+
+#+caption: http://www.euroinformatica.ro/documentation/programming/!!!Algorithms_CORMEN!!!/images/fig853_02.jpg
+[[./nth_root_of_unity.jpg]]
+
 $$
 \omega_n = e^{\frac{2\pi i}{n}}
 $$
@@ -269,18 +277,13 @@ $$
 \omega_n^2 = \omega_{\frac{n}{2}}
 $$
 
-altså kan vi skrive Fourier transformeringen op som
+Her bliver $f(\omega)$ evalueret rekursivt indtil et 0 grads polynomium er tilbage, hvor FFT'en skal returnere koefficient af polynomiet.
+De negative evalueringer bliver placeret på højrehåndssiden af den resulterende vektor og de positive på højre side.
 
-$$
-f(\omega_j) = lige_j + \omega_j \cdot ulige_j
-$$
-$$
-f(-\omega_j) = lige_j - \omega_j \cdot ulige_j
-$$
+*Konklussion:*
 
-$$
-lige_j = f(\omega_\frac{n}{2})
-$$
+
+
 
 * Tooling (programmering)
 Jeg valgte at skrive koden til denne case i rust, da jeg er komfortabel med sproget,

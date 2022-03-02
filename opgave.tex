@@ -1,4 +1,4 @@
-% Created 2022-03-01 Tue 18:39
+% Created 2022-03-02 Wed 16:17
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
@@ -62,9 +62,9 @@ github repo - \url{https://github.com/unic0nr9k/fourier-notebook}
 \newpage
 
 \section{Teori}
-\label{sec:org306180a}
+\label{sec:org1fa6ee1}
 \subsection{Rekursion og funktionel programmering}
-\label{sec:orga50635b}
+\label{sec:org80fe491}
 
 Rekursion er helt simpelt, en funktion der kalder sig selv.
 Dette bliver brugt meget i funktionel programmering.
@@ -78,7 +78,7 @@ Fordele ved funktionelle programmeringssprog er at de er designet til at formind
 og derved uforudventet adfærd.
 Side effects er defineret som en operation der muterer data udenfor den funktion der ejer data'en.
 Dette vil altså siges, at hvis man har en funktion der tager en pointer til en værdi og så ændrer på
-den værdi via pointeren, vil det være en side effect af funktionen.
+den værdi via pointeren, vil det være en side effekt af funktionen.
 
 Dette kan skabe uforudventet adfærd i et program og vil derfor typisk gerne undgås.
 
@@ -93,7 +93,7 @@ I min case har jeg anvendt fuldkommen funktionel psudo kode til at lave en model
 for hvordan jeg ville strukturere min implementering af Cooley-Tukey FFT algoritme.
 
 \subsection{Hvad er en Fourier transformation?}
-\label{sec:orged206c0}
+\label{sec:org8d810de}
 \newpage
 
 En Fourier transformation er en vektor transformation (der i øvrigt også kan udvides til n-dimensionelle tensore)
@@ -102,16 +102,16 @@ repræsenteret som en koefficient-vektor, til en punkt-vektor repræsentation.
 Dette er også ækvivalent til en time to frequency -domain transformation.
 Altså den også kan anvendes som en transformation af bølger repræsenteret som intensitet over tid til intensitet over frekvens.
 Her vil jeg lige pointere at alle disse operationer er ækvivalente, altså det er bare forskellige måder at repræsentere, tænke på og visualizere den samme transformation.
-Jeg vil primært fokusere på bølge repræsentationen af fourier transformationen, der jeg synes den er lidt nemmere at forstå.
+Jeg vil primært fokusere på bølge repræsentationen af Fourier transformationen, der jeg synes den er lidt nemmere at forstå.
 
-Her er som eksempel en bølge og dens tilhørende fourier transformation.
-Bølgen er en kombination af en 10Hz bølge og en 25Hz bølge.
+Her er som eksempel en bølge og dens tilhørende Fourier transformation.
+Bølgen er en kombination af en 7, 14 og 19 frekvens bølge (Frekvensen er enhedsløs der den er bølge længde over vektorens længde).
 
 \begin{center}
 \includegraphics[width=.9\linewidth]{./source_plot2.png}
 \end{center}
 
-Her kan man altså se der ligger to top punkter lige omkring 10 og 25 på x-aksen.
+Her kan man altså se der ligger lokale maksimal punkter lige omkring 7, 14 og 19 på x-aksen.
 \begin{center}
 \includegraphics[width=.9\linewidth]{./plot2.png}
 \end{center}
@@ -119,8 +119,8 @@ Her kan man altså se der ligger to top punkter lige omkring 10 og 25 på x-akse
 \bigskip
 
 \subsection{DFT}
-\label{sec:orgeac61fa}
-DFT er kort for diskret fourier transformation, og var den originale formel opdaget af Joseph Fourier i 1830.
+\label{sec:org1e74b13}
+DFT er kort for diskret Fourier transformation, og var den originale formel opdaget af Joseph Fourier i 1830.
 Han fandt ud af, hvordan man kunne lave de her transformationer, før man kunne udregne dem på computere,
 eller havde nogen praktisk anvendelse til dem\footnote{\url{https://en.wikipedia.org/wiki/Joseph\_Fourier}}.
 
@@ -129,13 +129,13 @@ $$
 \hat{g}(f) = \int_{+\infin}^{-\infin{}} g(t) \cdot e ^{-2\pi ift}dt
 $$
 
-Formlen ovenfor viser hvordan en diskret fourier transformation kan udregnes,
+Formlen ovenfor viser hvordan en diskret Fourier transformation kan udregnes,
 den kan se lidt skræmmende ud, men er nem nok at forstå når man lige har styr på et par koncepter indenfor matematik.
 
 \bigskip
 
 \subsubsection{Komplekse tal og Euler's identitet}
-\label{sec:org3bda14e}
+\label{sec:orgb42fab4}
 
 Et komplekst tal er et tal bestående af en imaginær del og en reel del (summen af dem).
 Den imaginære del af det komplekse tal er defineret som produktet af et
@@ -166,7 +166,7 @@ osv\ldots{}
 
 \newpage
 
-For at kunne forstå fourier transformeringer er det vigtigt at forstå Euler's identitet,
+For at kunne forstå Fourier transformeringer er det vigtigt at forstå Euler's identitet,
 som er defineret som
 
 $$
@@ -182,9 +182,9 @@ Det betyder at hvis vi bytter \(k\) ud med \(i\), må \(e^{ix}\) bevæge sig mod
 Her vil en halv rotation derfor svare til \(x=\pi\) og vi kan derved konkludere at \(e^{\pi i} = -1\).
 
 \subsubsection{Uddybning af Fourier transformation}
-\label{sec:org1336440}
+\label{sec:org12e3098}
 
-Den inderste del af den diskrete fourier transformering kan ses lidt som et prik produkt
+Den inderste del af den diskrete Fourier transformering kan ses lidt som et prik produkt
 $$
 f(t) = g(t) \cdot e ^{-2\pi ift}
 $$
@@ -198,6 +198,10 @@ og derfor vil \(f(t)\) være positiv hvis \(g(t)\) også er negativ.
 \(-2\pi\) sikre at en forøgelse af en tidsenhed svarende til en periode med frekvensen \(f\) også vil resultere
 i en fuld rotation af \(e^{-2\pi ift}\).
 
+Det skal være et integrale for at sikre at frekvensen matcher over en længere periode.
+Altså hvis man ikke brugte integralet,
+ville enkelte punkter der matcher dem fra frekvensen \(f\) også resultere i en høj værdi på \(\hat{g}(f)\).
+
 \bigskip
 
 DFT algoritmen har en algoritmisk kompleksitet på \(O(n^2)\) der \(\hat{g}\) er en funktion af både tid og frekvens.
@@ -205,10 +209,10 @@ DFT algoritmen har en algoritmisk kompleksitet på \(O(n^2)\) der \(\hat{g}\) er
 \newpage
 
 \subsection{FFT}
-\label{sec:orgb37ebc2}
+\label{sec:org664a851}
 
 \subsubsection{Koefficient to punkt repræsentation}
-\label{sec:org77c1d39}
+\label{sec:org9b398b8}
 
 Fourier transformeringen svares ikke kun til en tids til frekvens domæne transformering,
 men også til en koefficient til punkt repræsentation,
@@ -228,7 +232,7 @@ $$
 \hat{b}(x) = b((-i)^x)
 $$
 
-\textbf{Eksempel med Julia:}
+\textbf{DFT eksempel med Julia:}
 \begin{verbatim}
 julia> b(x) = 2*x^2 + 3*x^3 + x
 b (generic function with 1 method)
@@ -250,7 +254,7 @@ julia> fft([0, 1, 2, 3])
 \end{verbatim}
 
 I eksemplet over kan man tydeligt se \(O(n^2)\) kompleksiteten,
-der funktionen \(b\) har \(n\) led der skal udregnes,
+der funktionen \(b\), har \(n\) led der skal udregnes
 og \(b\) sig selv skal også computeres \(n\) gange.
 
 Polynomier af en lige grad er spejlet om y-aksen.
@@ -260,9 +264,11 @@ Polynomier af en ulige grad er spejlet om y-aksen og x-aksen.
 plot(x^2) + plot(x^3, color='red') + plot(x^4) + plot(x^5, color='red') + plot(x^6) + plot(x^7, color='red')
 \end{verbatim}
 
-\begin{center}
+\begin{figure}[htbp]
+\centering
 \includegraphics[width=.9\linewidth]{even_and_odd.png}
-\end{center}
+\caption{Lavet med sagemath}
+\end{figure}
 
 Vi kan udnytte den egenskab af polynomier ved at splitte vores polynomium op i ulige og lige led
 og derved evaluer polynomiet på mindre punkter.
@@ -273,11 +279,11 @@ f(x) = (3x^2 + 4x^3 + 2x^4 + x^5) = (3x^2 + 2x^4) + x(4x^2 + x^4)
 $$
 
 $$
-f_{lige}(x^2) = 3x + 2x^2
+f_{lige}(x) = 3x + 2x^2
 $$
 
 $$
-f_{ulige}(x^2) = 4x + x^2
+f_{ulige}(x) = 4x + x^2
 $$
 
 Bemærk at graden af alle ledn'e er divideret med 2 og en er trukket fra graden af det ulige polynomium.
@@ -305,6 +311,13 @@ For at kunne skal vi finde et sæt af unikke \(x\) værdier der kan opløftes i 
 Her er der nogen specielle tal der hedder the n'th roots of unity, der opfylder disse krav.
 
 \textbf{n'th root of unity:}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{./nth_root_of_unity.jpg}
+\caption{\url{http://www.euroinformatica.ro/documentation/programming/!!!Algorithms\_CORMEN!!!/images/fig853\_02.jpg}}
+\end{figure}
+
 $$
 \omega_n = e^{\frac{2\pi i}{n}}
 $$
@@ -317,21 +330,9 @@ $$
 \omega_n^2 = \omega_{\frac{n}{2}}
 $$
 
-altså kan vi skrive fourier transformeringen op som
-
-$$
-f(\omega_j) = lige_j + \omega_j \cdot ulige_j
-$$
-$$
-f(-\omega_j) = lige_j - \omega_j \cdot ulige_j
-$$
-
-$$
-lige_j = f(\omega_\frac{n}{2})
-$$
 
 \section{Tooling (programmering)}
-\label{sec:org28f6ed2}
+\label{sec:org4020591}
 Jeg valgte at skrive koden til denne case i rust, da jeg er komfortabel med sproget,
 og gerne ville eksperimentere med at lave en hurtig implementering af Cooley-Tukey algoritmen.
 
@@ -342,13 +343,13 @@ Jeg valgte at skrive koden i en jupyter notebook, da jeg ikke havde nogen egentl
 applikation af min kode i tankerne under forløbet.
 Det viste sig også at være super praktisk til at lave TDD (test driven development),
 da det betød jeg kunne smide nogen grafer ind, og have dem opdateret i næsten realtime,
-mens jeg arbejdede på implementeringen af fft algoritmen.
+mens jeg arbejdede på implementeringen af FFT algoritmen.
 
 \subsection{Rust sprog paradimer}
-\label{sec:org2ddd545}
+\label{sec:org6816d8b}
 Rust er et memory-safe programmeringssprog,
 hvilket betyder at det by-default ikke lader en skrive koder, der kan resultere i undefined-behavior\footnote{\url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}}.
-Dette betyder at rust har en borrow-checker der ikke lader ens kode compile hvis det bryder nogen regler defineret i rust sprog specifikationerne.
+Dette betyder at rust har en borrow-checker der ikke lader ens kode compile' hvis det bryder nogen regler defineret i rust sprog specifikationerne.
 Man kan for eksempel ikke bruge en reference i flere funktioner på en gang, og alle værdier skal makkeres med
 en mutability specificer, der bestemmer om man kan ændre på den. Derudover introducere rust også et koncept der hedder lifetimes,
 som kort sagt betyder at kompileren sikre at man ikke kan bruge references til værdier der er blevet deallokeret.
@@ -357,17 +358,17 @@ som kort sagt betyder at kompileren sikre at man ikke kan bruge references til v
 
 Disse regler er ikke absolutte. Man kan makkere kode som `unsafe` for at slippe uden om reglerne introduceret af compileren.
 
-I min kode har jeg for eksempel valgt at lave en meget unsafe implementering af fft algoritmen,
+I min kode har jeg for eksempel valgt at lave en meget unsafe implementering af FFT algoritmen,
 men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere undefined behavior i sin kode ved brug af min algoritme.
 
 \section{Inplace operationer og statisk allokering}
-\label{sec:orge890615}
+\label{sec:org2650200}
 
 \section{Twiddle factor}
-\label{sec:orgce4c477}
+\label{sec:org1f03919}
 
 \section{Bibliografi}
-\label{sec:orgd48cad2}
+\label{sec:org79bf6c7}
 
 1: Undefined-behavior - \url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}
 
@@ -379,7 +380,7 @@ men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere
 
 
 \section{Bilag}
-\label{sec:orgc2164b3}
+\label{sec:orgab44a44}
 
 Kode som pdf vedhæftet på næste side\ldots{}
 Grafer kan ikke vises i pdf'en, derfor anbefaler jeg at kigge på notebook'en linket til i toppen af dokumentet.
