@@ -14,10 +14,15 @@
 Kode med tekst og grafer - https://nbviewer.org/github/unic0rn9k/fourier-notebook/blob/master/README.ipynb
 
 github repo - [[https://github.com/unic0nr9k/fourier-notebook]]
+
+\bigskip
+
+Jeg vil stærkt opfordre til at prøve at downloade notebooken og prøve at eksperimentere med at kombinere forskellige andre bølger for at se at min FFT implementering virkeligt virker.
 #+end_center
 -----
 
 #+TOC: headlines 2
+
 \newpage
 
 * Teori
@@ -255,12 +260,14 @@ $$
 Her fra bliver $f$ delt op i lige og ulige koefficienter rekursivt indtil den skal evalueres på et punkt.
 
 For at kunne fortsætte herfra skal vi kunne generare $n$ tal, der alle giver 1 når de bliver opløftet i $n$'de.
-(Her skal $n$ altid være $2^{noget}$, for at den rekursive algoritme virker)
+Her skal $n$ altid være $2^{noget}$, for at polynomiet kan deles op i positive og negative par rekursivt ned til en koefficient.
 
 For at kunne skal vi finde et sæt af unikke $x$ værdier der kan opløftes i $2^n$ og stadig give et positivt og negativt par.
 Her er der nogen specielle tal der hedder the n'th roots of unity, der opfylder disse krav.
 
 *n'th root of unity:*
+
+Her anvendes Euler's formel til at udregne $n$ komplekse tal der er liggeligt fordelt på en enheds cirkel.
 
 #+caption: http://www.euroinformatica.ro/documentation/programming/!!!Algorithms_CORMEN!!!/images/fig853_02.jpg
 [[./nth_root_of_unity.jpg]]
@@ -277,12 +284,9 @@ $$
 \omega_n^2 = \omega_{\frac{n}{2}}
 $$
 
-Her bliver $f(\omega)$ evalueret rekursivt indtil et 0 grads polynomium er tilbage, hvor FFT'en skal returnere koefficient af polynomiet.
+Her bliver $f(\omega_n^j)$ evalueret rekursivt indtil et 0 grads polynomium er tilbage, hvor FFT'en skal returnere koefficient af polynomiet.
 De negative evalueringer bliver placeret på højrehåndssiden af den resulterende vektor og de positive på højre side.
-
-*Konklussion:*
-
-
+$j$ antager værdierne fra 0 til $n/2$.
 
 
 * Tooling (programmering)

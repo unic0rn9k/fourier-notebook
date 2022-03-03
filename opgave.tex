@@ -1,4 +1,4 @@
-% Created 2022-03-02 Wed 16:17
+% Created 2022-03-03 Thu 19:14
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
@@ -53,18 +53,23 @@
 Kode med tekst og grafer - \url{https://nbviewer.org/github/unic0rn9k/fourier-notebook/blob/master/README.ipynb}
 
 github repo - \url{https://github.com/unic0nr9k/fourier-notebook}
+
+\bigskip
+
+Jeg vil stærkt opfordre til at prøve at downloade notebooken og prøve at eksperimentere med at kombinere forskellige andre bølger for at se at min FFT implementering virkeligt virker.
 \end{center}
 
 \noindent\rule{\textwidth}{0.5pt}
 
 \setcounter{tocdepth}{2}
 \tableofcontents
+
 \newpage
 
 \section{Teori}
-\label{sec:org1fa6ee1}
+\label{sec:org384fbbb}
 \subsection{Rekursion og funktionel programmering}
-\label{sec:org80fe491}
+\label{sec:orgfff0d51}
 
 Rekursion er helt simpelt, en funktion der kalder sig selv.
 Dette bliver brugt meget i funktionel programmering.
@@ -93,7 +98,7 @@ I min case har jeg anvendt fuldkommen funktionel psudo kode til at lave en model
 for hvordan jeg ville strukturere min implementering af Cooley-Tukey FFT algoritme.
 
 \subsection{Hvad er en Fourier transformation?}
-\label{sec:org8d810de}
+\label{sec:orgf2bd8fa}
 \newpage
 
 En Fourier transformation er en vektor transformation (der i øvrigt også kan udvides til n-dimensionelle tensore)
@@ -119,7 +124,7 @@ Her kan man altså se der ligger lokale maksimal punkter lige omkring 7, 14 og 1
 \bigskip
 
 \subsection{DFT}
-\label{sec:org1e74b13}
+\label{sec:org93e7f1b}
 DFT er kort for diskret Fourier transformation, og var den originale formel opdaget af Joseph Fourier i 1830.
 Han fandt ud af, hvordan man kunne lave de her transformationer, før man kunne udregne dem på computere,
 eller havde nogen praktisk anvendelse til dem\footnote{\url{https://en.wikipedia.org/wiki/Joseph\_Fourier}}.
@@ -135,7 +140,7 @@ den kan se lidt skræmmende ud, men er nem nok at forstå når man lige har styr
 \bigskip
 
 \subsubsection{Komplekse tal og Euler's identitet}
-\label{sec:orgb42fab4}
+\label{sec:orgeb65330}
 
 Et komplekst tal er et tal bestående af en imaginær del og en reel del (summen af dem).
 Den imaginære del af det komplekse tal er defineret som produktet af et
@@ -182,7 +187,7 @@ Det betyder at hvis vi bytter \(k\) ud med \(i\), må \(e^{ix}\) bevæge sig mod
 Her vil en halv rotation derfor svare til \(x=\pi\) og vi kan derved konkludere at \(e^{\pi i} = -1\).
 
 \subsubsection{Uddybning af Fourier transformation}
-\label{sec:org12e3098}
+\label{sec:org79f0059}
 
 Den inderste del af den diskrete Fourier transformering kan ses lidt som et prik produkt
 $$
@@ -209,10 +214,10 @@ DFT algoritmen har en algoritmisk kompleksitet på \(O(n^2)\) der \(\hat{g}\) er
 \newpage
 
 \subsection{FFT}
-\label{sec:org664a851}
+\label{sec:orgeda93bb}
 
 \subsubsection{Koefficient to punkt repræsentation}
-\label{sec:org9b398b8}
+\label{sec:orge058199}
 
 Fourier transformeringen svares ikke kun til en tids til frekvens domæne transformering,
 men også til en koefficient til punkt repræsentation,
@@ -288,8 +293,7 @@ $$
 
 Bemærk at graden af alle ledn'e er divideret med 2 og en er trukket fra graden af det ulige polynomium.
 Dette gør at vektor repræsentationen af \(f_{lige}\) og \(f_{ulige}\) vil svares til alle de lige/ulige værdier fra \(\vec{f}\),
-samlet i nye vektorer. Her vil længden af \({\vec{f_{lige}}}\) og \({\vec{f_{lige}}}\) altså være \(n/2\), hvor \(n\) er længden af \(\vec{f}\).
-(Her betyder længde mængden af elementer i vektoren, og ikke afstanden mellem origo og vektorens spids)
+samlet i nye vektorer. Her vil dimensionen af \({\vec{f_{lige}}}\) og \({\vec{f_{lige}}}\) altså være \(n/2\), hvor \(n\) er dimensionen af \(\vec{f}\).
 
 $$
 f(x) = f_{lige}(x^2) + x \cdot f_{ulige}(x^2)
@@ -299,18 +303,20 @@ For negative x-værdier, er det altså kun \(f_{ulige}\) der skal sættes i minu
 der de lige er spejlet om y-aksen.
 
 $$
-f(-x_j) = f_{lige}(x^2_j) - x_j \cdot f_{ulige}(x^2_j)
+f(-x) = f_{lige}(x^2) - x \cdot f_{ulige}(x^2)
 $$
 
 Her fra bliver \(f\) delt op i lige og ulige koefficienter rekursivt indtil den skal evalueres på et punkt.
 
 For at kunne fortsætte herfra skal vi kunne generare \(n\) tal, der alle giver 1 når de bliver opløftet i \(n\)'de.
-(Her skal \(n\) altid være \(2^{noget}\), for at den rekursive algoritme virker)
+Her skal \(n\) altid være \(2^{noget}\), for at polynomiet kan deles op i positive og negative par rekursivt ned til en koefficient.
 
 For at kunne skal vi finde et sæt af unikke \(x\) værdier der kan opløftes i \(2^n\) og stadig give et positivt og negativt par.
 Her er der nogen specielle tal der hedder the n'th roots of unity, der opfylder disse krav.
 
 \textbf{n'th root of unity:}
+
+Her anvendes Euler's formel til at udregne \(n\) komplekse tal der er liggeligt fordelt på en enheds cirkel.
 
 \begin{figure}[htbp]
 \centering
@@ -330,9 +336,13 @@ $$
 \omega_n^2 = \omega_{\frac{n}{2}}
 $$
 
+Her bliver \(f(\omega_n^j)\) evalueret rekursivt indtil et 0 grads polynomium er tilbage, hvor FFT'en skal returnere koefficient af polynomiet.
+De negative evalueringer bliver placeret på højrehåndssiden af den resulterende vektor og de positive på højre side.
+\(j\) antager værdierne fra 0 til \(n/2\).
+
 
 \section{Tooling (programmering)}
-\label{sec:org4020591}
+\label{sec:org967efa1}
 Jeg valgte at skrive koden til denne case i rust, da jeg er komfortabel med sproget,
 og gerne ville eksperimentere med at lave en hurtig implementering af Cooley-Tukey algoritmen.
 
@@ -346,7 +356,7 @@ da det betød jeg kunne smide nogen grafer ind, og have dem opdateret i næsten 
 mens jeg arbejdede på implementeringen af FFT algoritmen.
 
 \subsection{Rust sprog paradimer}
-\label{sec:org6816d8b}
+\label{sec:org772e4c4}
 Rust er et memory-safe programmeringssprog,
 hvilket betyder at det by-default ikke lader en skrive koder, der kan resultere i undefined-behavior\footnote{\url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}}.
 Dette betyder at rust har en borrow-checker der ikke lader ens kode compile' hvis det bryder nogen regler defineret i rust sprog specifikationerne.
@@ -362,13 +372,13 @@ I min kode har jeg for eksempel valgt at lave en meget unsafe implementering af 
 men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere undefined behavior i sin kode ved brug af min algoritme.
 
 \section{Inplace operationer og statisk allokering}
-\label{sec:org2650200}
+\label{sec:org7d9d10b}
 
 \section{Twiddle factor}
-\label{sec:org1f03919}
+\label{sec:org0637aba}
 
 \section{Bibliografi}
-\label{sec:org79bf6c7}
+\label{sec:orgcd472f7}
 
 1: Undefined-behavior - \url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}
 
@@ -380,7 +390,7 @@ men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere
 
 
 \section{Bilag}
-\label{sec:orgab44a44}
+\label{sec:org1b4043f}
 
 Kode som pdf vedhæftet på næste side\ldots{}
 Grafer kan ikke vises i pdf'en, derfor anbefaler jeg at kigge på notebook'en linket til i toppen af dokumentet.
