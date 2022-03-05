@@ -273,21 +273,34 @@ Her anvendes Euler's formel til at udregne $n$ komplekse tal der er liggeligt fo
 [[./nth_root_of_unity.jpg]]
 
 $$
-\omega_n = e^{\frac{2\pi i}{n}}
+\omega_n = e^{\frac{-2\pi i}{n}}
 $$
 
 $$
 -\omega_n^j = \omega_n^{j+\frac{n}{2}}
 $$
 
+I min kode har jeg divideret $n$ med 2 i de rekursive kald i stedet for at tage \omega i anden, der det vil give det same resultat.
+\begin{equation}
+\begin{split}
+\omega_n^2 &= e^{\frac{-2\pi i}{n}} \\
+&= e^{\frac{-2\pi i \cdot 2}{n}} \\
+&= e^{\frac{-2\pi i}{n/2}} \\
+&= \omega_{\frac{n}{2}}
+\end{split}
+\end{equation}
+
+$\vec{f}$ vil blive udregnet ved at evaluere $f$ for vær værdi af $j$, hvor $j$ antager værdierne fra 0 til $n/2$.
+
 $$
-\omega_n^2 = \omega_{\frac{n}{2}}
+f(\omega^{j+\frac{n}{2}}_n) = f_{lige}(\omega^2) - \omega \cdot f_{ulige}(\omega^2)
+$$
+$$
+f(\omega^j_n) = f_{lige}(\omega^2) + \omega \cdot f_{ulige}(\omega^2)
 $$
 
 Her bliver $f(\omega_n^j)$ evalueret rekursivt indtil et 0 grads polynomium er tilbage, hvor FFT'en skal returnere koefficient af polynomiet.
 De negative evalueringer bliver placeret på højrehåndssiden af den resulterende vektor og de positive på højre side.
-$j$ antager værdierne fra 0 til $n/2$.
-
 
 * Tooling (programmering)
 Jeg valgte at skrive koden til denne case i rust, da jeg er komfortabel med sproget,
