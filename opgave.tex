@@ -1,4 +1,4 @@
-% Created 2022-03-05 Sat 16:39
+% Created 2022-03-05 Sat 18:52
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
@@ -25,11 +25,6 @@
             \setlength{\parindent}{0pt}
 \usepackage[danish]{babel}
 \usepackage{pdfpages}
-\usepackage{xcolor}
-\usepackage{titlesec}
-\titleformat{\section}[block]{\Large\bfseries\filcenter}{}{1em}{}
-\titleformat{\subsection}[block]{\bfseries\filcenter}{}{1em}{}
-\titleformat{\subsubsection}[hang]{\bfseries}{}{1em}{}
 
 \linespread{1.1}
 \hypersetup{pdfborder=0 0 0}
@@ -40,6 +35,12 @@
 \fancyfoot{}
 \pagestyle{fancy}
 \rfoot{Page \thepage \hspace{1pt} of \pageref{LastPage}}
+
+\usepackage{xcolor}
+\usepackage{titlesec}
+\titleformat{\section}[block]{\Large\bfseries\filcenter}{}{1em}{}
+\titleformat{\subsection}[block]{\bfseries\filcenter}{}{1em}{}
+\titleformat{\subsubsection}[hang]{\bfseries}{}{1em}{}
 \author{Aksel Mannstaedt}
 \date{}
 \title{Virkeligt Hurtige Fourier Transformationer}
@@ -70,9 +71,9 @@ Jeg vil stærkt opfordre til at prøve at downloade notebooken og prøve at eksp
 \newpage
 
 \section{Teori}
-\label{sec:orgd45d881}
+\label{sec:org9cdcee4}
 \subsection{Rekursion og funktionel programmering}
-\label{sec:org46eff2c}
+\label{sec:orgb989928}
 
 Rekursion er helt simpelt, en funktion der kalder sig selv.
 Dette bliver brugt meget i funktionel programmering.
@@ -101,7 +102,7 @@ I min case har jeg anvendt fuldkommen funktionel psudo kode til at lave en model
 for hvordan jeg ville strukturere min implementering af Cooley-Tukey FFT algoritme.
 
 \subsection{Hvad er en Fourier transformation?}
-\label{sec:orgb56bef6}
+\label{sec:org86f671a}
 \newpage
 
 En Fourier transformation er en vektor transformation (der i øvrigt også kan udvides til n-dimensionelle tensore)
@@ -127,7 +128,7 @@ Her kan man altså se der ligger lokale maksimal punkter lige omkring 7, 14 og 1
 \bigskip
 
 \subsection{DFT}
-\label{sec:orgf03f0de}
+\label{sec:orgc822cd3}
 DFT er kort for diskret Fourier transformation, og var den originale formel opdaget af Joseph Fourier i 1830.
 Han fandt ud af, hvordan man kunne lave de her transformationer, før man kunne udregne dem på computere,
 eller havde nogen praktisk anvendelse til dem\footnote{\url{https://en.wikipedia.org/wiki/Joseph\_Fourier}}.
@@ -143,7 +144,7 @@ den kan se lidt skræmmende ud, men er nem nok at forstå når man lige har styr
 \bigskip
 
 \subsubsection{Komplekse tal og Euler's identitet}
-\label{sec:org29709ad}
+\label{sec:org62450fb}
 
 Et komplekst tal er et tal bestående af en imaginær del og en reel del (summen af dem).
 Den imaginære del af det komplekse tal er defineret som produktet af et
@@ -190,7 +191,7 @@ Det betyder at hvis vi bytter \(k\) ud med \(i\), må \(e^{ix}\) bevæge sig mod
 Her vil en halv rotation derfor svare til \(x=\pi\) og vi kan derved konkludere at \(e^{\pi i} = -1\).
 
 \subsubsection{Uddybning af Fourier transformation}
-\label{sec:orge791f08}
+\label{sec:orge92577e}
 
 Den inderste del af den diskrete Fourier transformering kan ses lidt som et prik produkt
 $$
@@ -217,10 +218,10 @@ DFT algoritmen har en algoritmisk kompleksitet på \(O(n^2)\) der \(\hat{g}\) er
 \newpage
 
 \subsection{FFT (Fast Fourier Transformation)}
-\label{sec:org76a84d1}
+\label{sec:org63aef1e}
 
 \subsubsection{Koefficient to punkt repræsentation}
-\label{sec:org6cc76d6}
+\label{sec:org61740c7}
 
 Fourier transformeringen svares ikke kun til en tids til frekvens domæne transformering,
 men også til en koefficient til punkt repræsentation,
@@ -269,7 +270,14 @@ Polynomier af en lige grad er spejlet om y-aksen.
 Polynomier af en ulige grad er spejlet om y-aksen og x-aksen.
 
 \begin{verbatim}
-plot(x^2) + plot(x^3, color='red') + plot(x^4) + plot(x^5, color='red') + plot(x^6) + plot(x^7, color='red')
+beginning = 0
+
+p = plot(x^(beginning*2)) + plot(x^(beginning*2 +1), color='red')
+
+for n in range(beginning+2, 20):
+    p = p + plot(x^(n * 2)) + plot(x^(n*2 +1), color='red')
+
+p
 \end{verbatim}
 
 \begin{figure}[htbp]
@@ -360,7 +368,7 @@ Her bliver \(f(\omega_n^j)\) evalueret rekursivt indtil et 0 grads polynomium er
 De negative evalueringer bliver placeret på højrehåndssiden af den resulterende vektor og de positive på højre side.
 
 \section{Tooling (programmering)}
-\label{sec:orgeca7783}
+\label{sec:orga5fe218}
 Jeg valgte at skrive koden til denne case i rust, da jeg er komfortabel med sproget,
 og gerne ville eksperimentere med at lave en hurtig implementering af Cooley-Tukey algoritmen.
 
@@ -374,7 +382,7 @@ da det betød jeg kunne smide nogen grafer ind, og have dem opdateret i næsten 
 mens jeg arbejdede på implementeringen af FFT algoritmen.
 
 \subsection{Rust sprog paradimer}
-\label{sec:orgc8648ca}
+\label{sec:orgd2b9f06}
 Rust er et memory-safe programmeringssprog,
 hvilket betyder at det by-default ikke lader en skrive koder, der kan resultere i undefined-behavior\footnote{\url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}}.
 Dette betyder at rust har en borrow-checker der ikke lader ens kode compile' hvis det bryder nogen regler defineret i rust sprog specifikationerne.
@@ -390,13 +398,13 @@ I min kode har jeg for eksempel valgt at lave en meget unsafe implementering af 
 men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere undefined behavior i sin kode ved brug af min algoritme.
 
 \section{Inplace operationer og statisk allokering}
-\label{sec:org10f86ce}
+\label{sec:orge18b239}
 
 \section{Twiddle factor}
-\label{sec:org12822bb}
+\label{sec:org7a84a8a}
 
 \section{Bibliografi}
-\label{sec:orgaf6898a}
+\label{sec:org3d6a7e0}
 
 1: Undefined-behavior - \url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}
 
@@ -408,7 +416,7 @@ men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere
 
 
 \section{Bilag}
-\label{sec:orge1b6379}
+\label{sec:org0adfd87}
 
 Kode som pdf vedhæftet på næste side\ldots{}
 Grafer kan ikke vises i pdf'en, derfor anbefaler jeg at kigge på notebook'en linket til i toppen af dokumentet.

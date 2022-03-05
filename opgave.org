@@ -9,12 +9,6 @@
 #+OPTIONS: toc:nil
 #+options: date:nil
 
-#+LATEX_HEADER: \usepackage{xcolor}
-#+LATEX_HEADER: \usepackage{titlesec}
-#+LATEX_HEADER: \titleformat{\section}[block]{\Large\bfseries\filcenter}{}{1em}{}
-#+LATEX_HEADER: \titleformat{\subsection}[block]{\bfseries\filcenter}{}{1em}{}
-#+LATEX_HEADER: \titleformat{\subsubsection}[hang]{\bfseries}{}{1em}{}
-
 -----
 Kode med tekst og grafer - https://nbviewer.org/github/unic0rn9k/fourier-notebook/blob/master/README.ipynb
 
@@ -223,7 +217,14 @@ Polynomier af en lige grad er spejlet om y-aksen.
 Polynomier af en ulige grad er spejlet om y-aksen og x-aksen.
 
 #+BEGIN_SRC sage :file even_and_odd.png
-plot(x^2) + plot(x^3, color='red') + plot(x^4) + plot(x^5, color='red') + plot(x^6) + plot(x^7, color='red')
+beginning = 0
+
+p = plot(x^(beginning*2)) + plot(x^(beginning*2 +1), color='red')
+
+for n in range(beginning+2, 20):
+    p = p + plot(x^(n * 2)) + plot(x^(n*2 +1), color='red')
+
+p
 #+END_SRC
 
 #+caption: Lavet med sagemath
