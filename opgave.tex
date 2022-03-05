@@ -1,4 +1,4 @@
-% Created 2022-03-05 Sat 14:51
+% Created 2022-03-05 Sat 16:39
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
@@ -25,6 +25,11 @@
             \setlength{\parindent}{0pt}
 \usepackage[danish]{babel}
 \usepackage{pdfpages}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\titleformat{\section}[block]{\Large\bfseries\filcenter}{}{1em}{}
+\titleformat{\subsection}[block]{\bfseries\filcenter}{}{1em}{}
+\titleformat{\subsubsection}[hang]{\bfseries}{}{1em}{}
 
 \linespread{1.1}
 \hypersetup{pdfborder=0 0 0}
@@ -49,7 +54,6 @@
 
 \maketitle
 \noindent\rule{\textwidth}{0.5pt}
-\begin{center}
 Kode med tekst og grafer - \url{https://nbviewer.org/github/unic0rn9k/fourier-notebook/blob/master/README.ipynb}
 
 github repo - \url{https://github.com/unic0nr9k/fourier-notebook}
@@ -57,7 +61,6 @@ github repo - \url{https://github.com/unic0nr9k/fourier-notebook}
 \bigskip
 
 Jeg vil stærkt opfordre til at prøve at downloade notebooken og prøve at eksperimentere med at kombinere forskellige andre bølger for at se at min FFT implementering virkeligt virker.
-\end{center}
 
 \noindent\rule{\textwidth}{0.5pt}
 
@@ -67,9 +70,9 @@ Jeg vil stærkt opfordre til at prøve at downloade notebooken og prøve at eksp
 \newpage
 
 \section{Teori}
-\label{sec:org4af6088}
+\label{sec:orgd45d881}
 \subsection{Rekursion og funktionel programmering}
-\label{sec:org0708a7b}
+\label{sec:org46eff2c}
 
 Rekursion er helt simpelt, en funktion der kalder sig selv.
 Dette bliver brugt meget i funktionel programmering.
@@ -98,7 +101,7 @@ I min case har jeg anvendt fuldkommen funktionel psudo kode til at lave en model
 for hvordan jeg ville strukturere min implementering af Cooley-Tukey FFT algoritme.
 
 \subsection{Hvad er en Fourier transformation?}
-\label{sec:orgae084c4}
+\label{sec:orgb56bef6}
 \newpage
 
 En Fourier transformation er en vektor transformation (der i øvrigt også kan udvides til n-dimensionelle tensore)
@@ -124,7 +127,7 @@ Her kan man altså se der ligger lokale maksimal punkter lige omkring 7, 14 og 1
 \bigskip
 
 \subsection{DFT}
-\label{sec:org8bcd833}
+\label{sec:orgf03f0de}
 DFT er kort for diskret Fourier transformation, og var den originale formel opdaget af Joseph Fourier i 1830.
 Han fandt ud af, hvordan man kunne lave de her transformationer, før man kunne udregne dem på computere,
 eller havde nogen praktisk anvendelse til dem\footnote{\url{https://en.wikipedia.org/wiki/Joseph\_Fourier}}.
@@ -140,7 +143,7 @@ den kan se lidt skræmmende ud, men er nem nok at forstå når man lige har styr
 \bigskip
 
 \subsubsection{Komplekse tal og Euler's identitet}
-\label{sec:org077a1ac}
+\label{sec:org29709ad}
 
 Et komplekst tal er et tal bestående af en imaginær del og en reel del (summen af dem).
 Den imaginære del af det komplekse tal er defineret som produktet af et
@@ -187,7 +190,7 @@ Det betyder at hvis vi bytter \(k\) ud med \(i\), må \(e^{ix}\) bevæge sig mod
 Her vil en halv rotation derfor svare til \(x=\pi\) og vi kan derved konkludere at \(e^{\pi i} = -1\).
 
 \subsubsection{Uddybning af Fourier transformation}
-\label{sec:orgd2b373b}
+\label{sec:orge791f08}
 
 Den inderste del af den diskrete Fourier transformering kan ses lidt som et prik produkt
 $$
@@ -213,11 +216,11 @@ DFT algoritmen har en algoritmisk kompleksitet på \(O(n^2)\) der \(\hat{g}\) er
 
 \newpage
 
-\subsection{FFT}
-\label{sec:org8b6a31b}
+\subsection{FFT (Fast Fourier Transformation)}
+\label{sec:org76a84d1}
 
 \subsubsection{Koefficient to punkt repræsentation}
-\label{sec:org6edc24d}
+\label{sec:org6cc76d6}
 
 Fourier transformeringen svares ikke kun til en tids til frekvens domæne transformering,
 men også til en koefficient til punkt repræsentation,
@@ -314,13 +317,15 @@ Her skal \(n\) altid være \(2^{noget}\), for at polynomiet kan deles op i posit
 For at kunne skal vi finde et sæt af unikke \(x\) værdier der kan opløftes i \(2^n\) og stadig give et positivt og negativt par.
 Her er der nogen specielle tal der hedder the n'th roots of unity, der opfylder disse krav.
 
+\bigskip
+
 \textbf{n'th root of unity:}
 
 Her anvendes Euler's formel til at udregne \(n\) komplekse tal der er liggeligt fordelt på en enheds cirkel.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=.9\linewidth]{./nth_root_of_unity.jpg}
+\includegraphics[width=120]{./nth_root_of_unity.jpg}
 \caption{\url{http://www.euroinformatica.ro/documentation/programming/!!!Algorithms\_CORMEN!!!/images/fig853\_02.jpg}}
 \end{figure}
 
@@ -332,7 +337,7 @@ $$
 -\omega_n^j = \omega_n^{j+\frac{n}{2}}
 $$
 
-I min kode har jeg divideret \(n\) med 2 i de rekursive kald i stedet for at tage \(\omega\) i anden, der det vil give det same resultat.
+I min kode har jeg divideret \(n\) med 2 i de rekursive kald i stedet for at anvende \(\omega^2\), der det vil give det same resultat.
 \begin{equation}
 \begin{split}
 \omega_n^2 &= e^{\frac{-2\pi i}{n}} \\
@@ -345,17 +350,17 @@ I min kode har jeg divideret \(n\) med 2 i de rekursive kald i stedet for at tag
 \(\vec{f}\) vil blive udregnet ved at evaluere \(f\) for vær værdi af \(j\), hvor \(j\) antager værdierne fra 0 til \(n/2\).
 
 $$
-f(\omega^{j+\frac{n}{2}}_n) = f_{lige}(\omega^2) - \omega \cdot f_{ulige}(\omega^2)
+f(\omega^{j+\frac{n}{2}}_n) = f_{lige}(\omega^j_{n/2}) - \omega^j_n \cdot f_{ulige}(\omega^j_{n/2})
 $$
 $$
-f(\omega^j_n) = f_{lige}(\omega^2) + \omega \cdot f_{ulige}(\omega^2)
+f(\omega^j_n) = f_{lige}(\omega^j_{n/2}) + \omega^j_n \cdot f_{ulige}(\omega^j_{n/2})
 $$
 
 Her bliver \(f(\omega_n^j)\) evalueret rekursivt indtil et 0 grads polynomium er tilbage, hvor FFT'en skal returnere koefficient af polynomiet.
 De negative evalueringer bliver placeret på højrehåndssiden af den resulterende vektor og de positive på højre side.
 
 \section{Tooling (programmering)}
-\label{sec:org0e66b7a}
+\label{sec:orgeca7783}
 Jeg valgte at skrive koden til denne case i rust, da jeg er komfortabel med sproget,
 og gerne ville eksperimentere med at lave en hurtig implementering af Cooley-Tukey algoritmen.
 
@@ -369,7 +374,7 @@ da det betød jeg kunne smide nogen grafer ind, og have dem opdateret i næsten 
 mens jeg arbejdede på implementeringen af FFT algoritmen.
 
 \subsection{Rust sprog paradimer}
-\label{sec:org71102bc}
+\label{sec:orgc8648ca}
 Rust er et memory-safe programmeringssprog,
 hvilket betyder at det by-default ikke lader en skrive koder, der kan resultere i undefined-behavior\footnote{\url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}}.
 Dette betyder at rust har en borrow-checker der ikke lader ens kode compile' hvis det bryder nogen regler defineret i rust sprog specifikationerne.
@@ -385,13 +390,13 @@ I min kode har jeg for eksempel valgt at lave en meget unsafe implementering af 
 men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere undefined behavior i sin kode ved brug af min algoritme.
 
 \section{Inplace operationer og statisk allokering}
-\label{sec:org5c1b24c}
+\label{sec:org10f86ce}
 
 \section{Twiddle factor}
-\label{sec:org40765a8}
+\label{sec:org12822bb}
 
 \section{Bibliografi}
-\label{sec:orgb7a2c04}
+\label{sec:orgaf6898a}
 
 1: Undefined-behavior - \url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}
 
@@ -403,7 +408,7 @@ men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere
 
 
 \section{Bilag}
-\label{sec:org168d664}
+\label{sec:orge1b6379}
 
 Kode som pdf vedhæftet på næste side\ldots{}
 Grafer kan ikke vises i pdf'en, derfor anbefaler jeg at kigge på notebook'en linket til i toppen af dokumentet.

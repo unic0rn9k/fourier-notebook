@@ -9,8 +9,13 @@
 #+OPTIONS: toc:nil
 #+options: date:nil
 
+#+LATEX_HEADER: \usepackage{xcolor}
+#+LATEX_HEADER: \usepackage{titlesec}
+#+LATEX_HEADER: \titleformat{\section}[block]{\Large\bfseries\filcenter}{}{1em}{}
+#+LATEX_HEADER: \titleformat{\subsection}[block]{\bfseries\filcenter}{}{1em}{}
+#+LATEX_HEADER: \titleformat{\subsubsection}[hang]{\bfseries}{}{1em}{}
+
 -----
-#+begin_center
 Kode med tekst og grafer - https://nbviewer.org/github/unic0rn9k/fourier-notebook/blob/master/README.ipynb
 
 github repo - [[https://github.com/unic0nr9k/fourier-notebook]]
@@ -18,7 +23,6 @@ github repo - [[https://github.com/unic0nr9k/fourier-notebook]]
 \bigskip
 
 Jeg vil stærkt opfordre til at prøve at downloade notebooken og prøve at eksperimentere med at kombinere forskellige andre bølger for at se at min FFT implementering virkeligt virker.
-#+end_center
 -----
 
 #+TOC: headlines 2
@@ -168,7 +172,7 @@ DFT algoritmen har en algoritmisk kompleksitet på $O(n^2)$ der $\hat{g}$ er en 
 
 \newpage
 
-** FFT
+** FFT (Fast Fourier Transformation)
 
 *** Koefficient to punkt repræsentation
 
@@ -265,11 +269,14 @@ Her skal $n$ altid være $2^{noget}$, for at polynomiet kan deles op i positive 
 For at kunne skal vi finde et sæt af unikke $x$ værdier der kan opløftes i $2^n$ og stadig give et positivt og negativt par.
 Her er der nogen specielle tal der hedder the n'th roots of unity, der opfylder disse krav.
 
+\bigskip
+
 *n'th root of unity:*
 
 Her anvendes Euler's formel til at udregne $n$ komplekse tal der er liggeligt fordelt på en enheds cirkel.
 
 #+caption: http://www.euroinformatica.ro/documentation/programming/!!!Algorithms_CORMEN!!!/images/fig853_02.jpg
+#+attr_latex: :width 120
 [[./nth_root_of_unity.jpg]]
 
 $$
@@ -280,7 +287,7 @@ $$
 -\omega_n^j = \omega_n^{j+\frac{n}{2}}
 $$
 
-I min kode har jeg divideret $n$ med 2 i de rekursive kald i stedet for at tage \omega i anden, der det vil give det same resultat.
+I min kode har jeg divideret $n$ med 2 i de rekursive kald i stedet for at anvende $\omega^2$, der det vil give det same resultat.
 \begin{equation}
 \begin{split}
 \omega_n^2 &= e^{\frac{-2\pi i}{n}} \\
@@ -293,10 +300,10 @@ I min kode har jeg divideret $n$ med 2 i de rekursive kald i stedet for at tage 
 $\vec{f}$ vil blive udregnet ved at evaluere $f$ for vær værdi af $j$, hvor $j$ antager værdierne fra 0 til $n/2$.
 
 $$
-f(\omega^{j+\frac{n}{2}}_n) = f_{lige}(\omega^2) - \omega \cdot f_{ulige}(\omega^2)
+f(\omega^{j+\frac{n}{2}}_n) = f_{lige}(\omega^j_{n/2}) - \omega^j_n \cdot f_{ulige}(\omega^j_{n/2})
 $$
 $$
-f(\omega^j_n) = f_{lige}(\omega^2) + \omega \cdot f_{ulige}(\omega^2)
+f(\omega^j_n) = f_{lige}(\omega^j_{n/2}) + \omega^j_n \cdot f_{ulige}(\omega^j_{n/2})
 $$
 
 Her bliver $f(\omega_n^j)$ evalueret rekursivt indtil et 0 grads polynomium er tilbage, hvor FFT'en skal returnere koefficient af polynomiet.
