@@ -26,7 +26,7 @@ Jeg vil stærkt opfordre til at prøve at downloade notebooken og prøve at eksp
 * Teori
 ** Rekursion og funktionel programmering
 
-Rekursion er helt simpelt, en funktion der kalder sig selv.
+Rekursion er helt simpelt, det der sker når en funktion der kalder sig selv.
 Dette bliver brugt meget i funktionel programmering.
 
 Funktionel programmeringssprog er et paradigme kendetegnet ved
@@ -54,16 +54,22 @@ for hvordan jeg ville strukturere min implementering af Cooley-Tukey FFT algorit
 
 [fn:2] https://en.wikipedia.org/wiki/Functional_programming
 
-** Hvad er en Fourier transformation?
+*** :)
 \newpage
+
+** Hvad er en Fourier transformation?
 
 En Fourier transformation er en vektor transformation (der i øvrigt også kan udvides til n-dimensionelle tensore)
 der blandt andet kan anvendes til at transformere et polynomium,
 repræsenteret som en koefficient-vektor, til en punkt-vektor repræsentation.
+
 Dette er også ækvivalent til en time to frequency -domain transformation.
-Altså den også kan anvendes som en transformation af bølger repræsenteret som intensitet over tid til intensitet over frekvens.
+Altså den kan også anvendes som en transformation af bølger, repræsenteret som intensitet over tid, til intensitet over frekvens.
+
 Her vil jeg lige pointere at alle disse operationer er ækvivalente, altså det er bare forskellige måder at repræsentere, tænke på og visualizere den samme transformation.
-Jeg vil primært fokusere på bølge repræsentationen af Fourier transformationen, der jeg synes den er lidt nemmere at forstå.
+Først vil jeg primært fokusere på bølge repræsentationen af Fourier transformationen.
+
+\bigskip
 
 Her er som eksempel en bølge og dens tilhørende Fourier transformation.
 Bølgen er en kombination af en 7, 14 og 19 frekvens bølge (Frekvensen er enhedsløs der den er bølge længde over vektorens længde).
@@ -86,13 +92,13 @@ $$
 $$
 
 Formlen ovenfor viser hvordan en diskret Fourier transformation kan udregnes,
-den kan se lidt skræmmende ud, men er nem nok at forstå når man lige har styr på et par koncepter indenfor matematik.
+den kan se lidt skræmmende ud, men er nem nok at forstå når man lige har styr på et par koncepter først.
 
 \bigskip
 
 [fn:3] https://en.wikipedia.org/wiki/Joseph_Fourier
 
-*** Komplekse tal og Euler's identitet
+*** Komplekse tal, Euler's formel og Euler's identitet
 
 Et komplekst tal er et tal bestående af en imaginær del og en reel del (summen af dem).
 Den imaginære del af det komplekse tal er defineret som produktet af et
@@ -123,8 +129,8 @@ osv...
 
 \newpage
 
-For at kunne forstå Fourier transformeringer er det vigtigt at forstå Euler's identitet,
-som er defineret som
+Euler's formel er helt central i Fourier transformationen, og kan forstås gennem Euler's identitet,
+som er en populær ligning i matematikkens verden, der er defineret som
 
 $$
 e^{\pi i} = -1
@@ -133,10 +139,18 @@ $$
 Dette udtryk kommer af at $e^x$ er sit eget derivativ ($e$ er Euler's konstant [fn:4]),
 det vil altså siges at $\frac{d}{dx}e^{kx} = k\cdot e^{kx}$, hvor k er en konstant.
 
-Altså man kan sige at $e^{kx}$ har hældningen $k \cdot e^{kx}$.
+Altså har $e^{kx}$ hældningen $k \cdot e^{kx}$.
 Det betyder at hvis vi bytter $k$ ud med $i$, må $e^{ix}$ bevæge sig mod en $90^\circ$ rotation.
 
-Her kan man anvende Taylor serier til at bevise at $e^z$
+\bigskip
+
+Det viser sig faktisk at Taylor serie udvidelsen af $e^{ix}$ er den samme som den af $cos(x) + i \cdot sin(x)$,
+altså må de to funktioner være ens [fn:5][fn:6].
+
+Euler's formel, også kendt som Euler's notation, er derfor defineret som
+$$
+e^{ix} = cos(x) + i \cdot sin(x)
+$$
 
 Her vil en halv rotation derfor svare til $x=\pi$ og vi kan derved konkludere at $e^{\pi i} = -1$.
 
@@ -145,9 +159,15 @@ Her vil en halv rotation derfor svare til $x=\pi$ og vi kan derved konkludere at
 [[./eulers_formula.png]]
 
 [fn:4] https://en.wikipedia.org/wiki/Euler%27s_constant
+[fn:5] https://socratic.org/questions/how-do-you-use-a-taylor-series-to-prove-euler-s-formula
+[fn:6] https://en.wikipedia.org/wiki/Euler's_formula
+
+*** :)
+\newpage
 
 *** Uddybning af Fourier transformation
 
+Fourier transformationen er nemmere at forstå hvis man deler den op i bider.
 Den inderste del af den diskrete Fourier transformering kan ses lidt som et prik produkt
 $$
 f(t) = g(t) \cdot e ^{-2\pi ift}
@@ -162,9 +182,11 @@ og derfor vil $f(t)$ være positiv hvis $g(t)$ også er negativ.
 $-2\pi$ sikre at en forøgelse af en tidsenhed svarende til en periode med frekvensen $f$ også vil resultere
 i en fuld rotation af $e^{-2\pi ift}$.
 
-Det skal være et integrale for at sikre at frekvensen matcher over en længere periode.
+\bigskip
+
+Integralet bliver taget af $g(t)e^{-2\pi ift}$ for at sikre at frekvensen matcher over tid.
 Altså hvis man ikke brugte integralet,
-ville enkelte punkter der matcher dem fra frekvensen $f$ også resultere i en høj værdi på $\hat{g}(f)$.
+ville enkelte punkter, der matcher dem fra frekvensen $f$, resultere i en høj værdi på $\hat{g}(f)$ for frekvenser der egentligt ikke er til stede i $g(t)$.
 
 \bigskip
 
@@ -177,7 +199,9 @@ DFT algoritmen har en algoritmisk kompleksitet på $O(n^2)$ der $\hat{g}$ er en 
 *** Koefficient to punkt repræsentation
 
 Fourier transformeringen svares ikke kun til en tids til frekvens domæne transformering,
-men også til en koefficient til punkt repræsentation,
+men også til en koefficient til punkt repræsentation.
+
+\bigskip
 
 givet en bølge repræsenteret som en vektor af intensitet over tid
 $$
@@ -238,7 +262,9 @@ p
 [[file:/home/unic0rn9k/.sage/temp/unic0rn9k/22709/tmp_b6z75wcz.png]]
 
 Vi kan udnytte den egenskab af polynomier ved at splitte vores polynomium op i ulige og lige led
-og derved evaluer polynomiet på mindre punkter.
+og derved evaluer polynomiet på færre punkter.
+
+\bigskip
 
 *Eksempel:*
 $$
@@ -262,7 +288,7 @@ f(x) = f_{lige}(x^2) + x \cdot f_{ulige}(x^2)
 $$
 
 For negative x-værdier, er det altså kun $f_{ulige}$ der skal sættes i minus,
-der de lige er spejlet om y-aksen.
+der de lige kun er spejlet om y-aksen.
 
 $$
 f(-x) = f_{lige}(x^2) - x \cdot f_{ulige}(x^2)
@@ -270,39 +296,32 @@ $$
 
 Her fra bliver $f$ delt op i lige og ulige koefficienter rekursivt indtil den skal evalueres på et punkt.
 
-For at kunne fortsætte herfra skal vi kunne generare $n$ tal, der alle giver 1 når de bliver opløftet i $n$'de.
+For at kunne forsætte herfra uden at bryde rekursion, skal vi kunne generare $n$ tal, der alle giver 1 når opløftet i $n$'de.
 Her skal $n$ altid være $2^{noget}$, for at polynomiet kan deles op i positive og negative par rekursivt ned til en koefficient.
-
-For at kunne skal vi finde et sæt af unikke $x$ værdier der kan opløftes i $2^n$ og stadig give et positivt og negativt par.
-Her er der nogen specielle tal der hedder the n'th roots of unity, der opfylder disse krav.
 
 \bigskip
 
-*n'th root of unity:*
+*** n'th roots of unity
 
 Her anvendes Euler's formel til at udregne $n$ komplekse tal der er liggeligt fordelt på en enheds cirkel.
-
-#+caption: http://www.euroinformatica.ro/documentation/programming/!!!Algorithms_CORMEN!!!/images/fig853_02.jpg
-#+attr_latex: :width 120
-[[./nth_root_of_unity.jpg]]
+De punkter bliver noteret som $\omega_n$ og kan udregnes med
 
 $$
 \omega_n = e^{\frac{-2\pi i}{n}}
 $$
 
+#+caption: http://www.euroinformatica.ro/documentation/programming/!!!Algorithms_CORMEN!!!/images/fig853_02.jpg
+#+attr_latex: :width 120
+[[./nth_root_of_unity.jpg]]
+
+Her vil $\omega^{j+1}$ svares til en $n$'de del rotation om enheds cirklen fra $\omega^j$.
+
+Alle \omega punkter har tilsvarende negative punkter spejlet om 0,0
 $$
 -\omega_n^j = \omega_n^{j+\frac{n}{2}}
 $$
 
-I min kode har jeg divideret $n$ med 2 i de rekursive kald i stedet for at anvende $\omega^2$, der det vil give det same resultat.
-\begin{equation}
-\begin{split}
-\omega_n^2 &= e^{\frac{-2\pi i}{n}} \\
-&= e^{\frac{-2\pi i \cdot 2}{n}} \\
-&= e^{\frac{-2\pi i}{n/2}} \\
-&= \omega_{\frac{n}{2}}
-\end{split}
-\end{equation}
+\bigskip
 
 $\vec{f}$ vil blive udregnet ved at evaluere $f$ for vær værdi af $j$, hvor $j$ antager værdierne fra 0 til $n/2$.
 
@@ -315,6 +334,18 @@ $$
 
 Her bliver $f(\omega_n^j)$ evalueret rekursivt indtil et 0 grads polynomium er tilbage, hvor FFT'en skal returnere koefficient af polynomiet.
 De negative evalueringer bliver placeret på højrehåndssiden af den resulterende vektor og de positive på højre side.
+
+\bigskip
+
+I min kode har jeg divideret $n$ med 2 i de rekursive kald i stedet for at anvende $\omega^2$, der det vil give det same resultat.
+
+\begin{equation}
+\begin{split}
+\omega_n^2 &= e^{\frac{-2\pi i \cdot 2}{n}} \\
+&= e^{\frac{-2\pi i}{n/2}} \\
+&= \omega_{\frac{n}{2}}
+\end{split}
+\end{equation}
 
 * Tooling (programmering)
 Jeg valgte at skrive koden til denne case i rust, da jeg er komfortabel med sproget,
@@ -346,9 +377,40 @@ men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere
 
 [fn:1] https://doc.rust-lang.org/reference/behavior-considered-undefined.html
 
-* Inplace operationer og statisk allokering
+* Min implementering af FFT algoritmen
+I min implementering af Cooley-Tukey algoritmen har jeg ikke valgt at tage en fuldkommen funktionel tilgang.
+Jeg har i stedet valgt at bruge pointere der bliver shiftet til højre for hvert rekursivt kaldt.
+Dette gør at jeg har kunne lave en safe wrapper funktion der tjekker om længden af input vektoren er $2^{noget}$
+og derefter allokere alt hukommelse der skal anvendes på en gang (Dette er hurtigere en mange små).
 
-* Twiddle factor
+#+begin_src rust
+fn fft<const LEN: usize>(x: StaticVecRef<Complex<f32>, LEN>)
+    -> [Complex<f32>; LEN]
+{
+    // Tjek om dimensionaliteten af vektoren er valid.
+    assert_eq!(LEN & (LEN - 1), 0);
+    // Allokere en kopi af x (input vektoren).
+    let mut ret = **x;
+    // Kald til rekursiv funktion
+    unsafe{ unsafe_fft::<LEN>(x.as_ptr(), ret.as_mut_ptr(), LEN, 1) };
+    // Implicit return.
+    ret
+}
+#+end_src
+
+fft funktionen allokere altså et stykke hukommelse på samme størrelse som input vektoren, som det eneste.
+
+* Kan den blive endnu hurtigere?
+I min fft bliver $\omega_n$ udregnet for hvert rekursivt kald hvor $n$ er støre end 1.
+Dette er ret unødvendigt, der man altid kan udregne $\omega_{n/2}$ kan udregnes ud fra $\omega_n$.
+
+Her kan man altså udregne $n$ \omega-værdier for $\omega_n$, hvor $n$ er et virkeligt stort tal,
+på compiletime.
+
+Dette bliver kald for twiddle factors.
+
+Her ville man altså kunne for et signifikant performance increase,
+ved at indicere ind i et array med præ-udregnede twiddle factors, når Fourier transformation til en vektor med færre dimensioner end $n$ skal udregnes.
 
 * Bibliografi
 
@@ -360,6 +422,9 @@ men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere
 
 4: Euler's konstant - https://en.wikipedia.org/wiki/Euler%27s_constant
 
+5: Euler's formel bevis med Taylor serier - https://socratic.org/questions/how-do-you-use-a-taylor-series-to-prove-euler-s-formula
+
+6: Euler's formel - https://en.wikipedia.org/wiki/Euler's_formula
 
 * Bilag
 
