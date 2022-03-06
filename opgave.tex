@@ -1,4 +1,4 @@
-% Created 2022-03-06 Sun 13:39
+% Created 2022-03-06 Sun 14:13
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
@@ -71,9 +71,9 @@ Jeg vil stærkt opfordre til at prøve at downloade notebooken og prøve at eksp
 \newpage
 
 \section{Teori}
-\label{sec:orgd439df9}
+\label{sec:org48f2607}
 \subsection{Rekursion og funktionel programmering}
-\label{sec:orgfd68fdd}
+\label{sec:org49aefbc}
 
 Rekursion er helt simpelt, det der sker når en funktion der kalder sig selv.
 Dette bliver brugt meget i funktionel programmering.
@@ -102,11 +102,11 @@ I min case har jeg anvendt fuldkommen funktionel psudo kode til at lave en model
 for hvordan jeg ville strukturere min implementering af Cooley-Tukey FFT algoritme.
 
 \subsubsection{:)}
-\label{sec:org9ab5401}
+\label{sec:orga78afe1}
 \newpage
 
 \subsection{Hvad er en Fourier transformation?}
-\label{sec:org1ccd2b1}
+\label{sec:org0b8030f}
 
 En Fourier transformation er en vektor transformation (der i øvrigt også kan udvides til n-dimensionelle tensore)
 der blandt andet kan anvendes til at transformere et polynomium,
@@ -135,7 +135,7 @@ Her kan man altså se der ligger lokale maksimal punkter lige omkring 7, 14 og 1
 \bigskip
 
 \subsection{DFT}
-\label{sec:org0f8035f}
+\label{sec:org35ab26c}
 DFT er kort for diskret Fourier transformation, og var den originale formel opdaget af Joseph Fourier i 1830.
 Han fandt ud af, hvordan man kunne lave de her transformationer, før man kunne udregne dem på computere,
 eller havde nogen praktisk anvendelse til dem\footnote{\url{https://en.wikipedia.org/wiki/Joseph\_Fourier}}.
@@ -151,7 +151,7 @@ den kan se lidt skræmmende ud, men er nem nok at forstå når man lige har styr
 \bigskip
 
 \subsubsection{Komplekse tal, Euler's formel og Euler's identitet}
-\label{sec:orge63022b}
+\label{sec:org349558b}
 
 Et komplekst tal er et tal bestående af en imaginær del og en reel del (summen af dem).
 Den imaginære del af det komplekse tal er defineret som produktet af et
@@ -214,11 +214,11 @@ Her vil en halv rotation derfor svare til \(x=\pi\) og vi kan derved konkludere 
 \end{figure}
 
 \subsubsection{:)}
-\label{sec:org6a4578d}
+\label{sec:org6eba5ed}
 \newpage
 
 \subsubsection{Uddybning af Fourier transformation}
-\label{sec:org71ee2df}
+\label{sec:org02844df}
 
 Fourier transformationen er nemmere at forstå hvis man deler den op i bider.
 Den inderste del af den diskrete Fourier transformering kan ses lidt som et prik produkt
@@ -248,10 +248,10 @@ DFT algoritmen har en algoritmisk kompleksitet på \(O(n^2)\) der \(\hat{g}\) er
 \newpage
 
 \subsection{FFT (Fast Fourier Transformation)}
-\label{sec:org7e2f583}
+\label{sec:orgc7c9715}
 
 \subsubsection{Koefficient to punkt repræsentation}
-\label{sec:org15c1721}
+\label{sec:org0f6e23b}
 
 Fourier transformeringen svares ikke kun til en tids til frekvens domæne transformering,
 men også til en koefficient til punkt repræsentation.
@@ -359,7 +359,7 @@ Her skal \(n\) altid være \(2^{noget}\), for at polynomiet kan deles op i posit
 \bigskip
 
 \subsubsection{n'th roots of unity}
-\label{sec:orgd7fba16}
+\label{sec:orgf9f84a6}
 
 Her anvendes Euler's formel til at udregne \(n\) komplekse tal der er liggeligt fordelt på en enheds cirkel.
 De punkter bliver noteret som \(\omega_n\) og kan udregnes med
@@ -408,7 +408,7 @@ I min kode har jeg divideret \(n\) med 2 i de rekursive kald i stedet for at anv
 \end{equation}
 
 \section{Tooling (programmering)}
-\label{sec:org3eb6bda}
+\label{sec:org133d84f}
 Jeg valgte at skrive koden til denne case i rust, da jeg er komfortabel med sproget,
 og gerne ville eksperimentere med at lave en hurtig implementering af Cooley-Tukey algoritmen.
 
@@ -422,7 +422,7 @@ da det betød jeg kunne smide nogen grafer ind, og have dem opdateret i næsten 
 mens jeg arbejdede på implementeringen af FFT algoritmen.
 
 \subsection{Rust sprog paradimer}
-\label{sec:org4793013}
+\label{sec:orgbe5837a}
 Rust er et memory-safe programmeringssprog,
 hvilket betyder at det by-default ikke lader en skrive koder, der kan resultere i undefined-behavior\footnote{\url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}}.
 Dette betyder at rust har en borrow-checker der ikke lader ens kode compile' hvis det bryder nogen regler defineret i rust sprog specifikationerne.
@@ -438,7 +438,7 @@ I min kode har jeg for eksempel valgt at lave en meget unsafe implementering af 
 men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere undefined behavior i sin kode ved brug af min algoritme.
 
 \section{Min implementering af FFT algoritmen}
-\label{sec:org1e0c086}
+\label{sec:orgf7c2b6f}
 I min implementering af Cooley-Tukey algoritmen har jeg ikke valgt at tage en fuldkommen funktionel tilgang.
 Jeg har i stedet valgt at bruge pointere der bliver shiftet til højre for hvert rekursivt kaldt.
 Dette gør at jeg har kunne lave en safe wrapper funktion der tjekker om længden af input vektoren er \(2^{noget}\)
@@ -462,7 +462,7 @@ fn fft<const LEN: usize>(x: StaticVecRef<Complex<f32>, LEN>)
 fft funktionen allokere altså et stykke hukommelse på samme størrelse som input vektoren, som det eneste.
 
 \section{Kan den blive endnu hurtigere?}
-\label{sec:org5c6aeb4}
+\label{sec:orge9bda4f}
 I min fft bliver \(\omega_n\) udregnet for hvert rekursivt kald hvor \(n\) er støre end 1.
 Dette er ret unødvendigt, der man altid kan udregne \(\omega_{n/2}\) kan udregnes ud fra \(\omega_n\).
 
@@ -475,7 +475,7 @@ Her ville man altså kunne for et signifikant performance increase,
 ved at indicere ind i et array med præ-udregnede twiddle factors, når Fourier transformation til en vektor med færre dimensioner end \(n\) skal udregnes.
 
 \section{Bibliografi}
-\label{sec:org559d81b}
+\label{sec:org4fbe7c5}
 
 1: Undefined-behavior - \url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}
 
@@ -490,7 +490,7 @@ ved at indicere ind i et array med præ-udregnede twiddle factors, når Fourier 
 6: Euler's formel - \url{https://en.wikipedia.org/wiki/Euler's\_formula}
 
 \section{Bilag}
-\label{sec:org7360d16}
+\label{sec:org7ca7524}
 
 Kode som pdf vedhæftet på næste side\ldots{}
 Grafer kan ikke vises i pdf'en, derfor anbefaler jeg at kigge på notebook'en linket til i toppen af dokumentet.
