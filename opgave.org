@@ -133,10 +133,16 @@ $$
 Dette udtryk kommer af at $e^x$ er sit eget derivativ ($e$ er Euler's konstant [fn:4]),
 det vil altså siges at $\frac{d}{dx}e^{kx} = k\cdot e^{kx}$, hvor k er en konstant.
 
-Altså man kan sige at $e^{kx}$ bevæger sig i retningen $k \cdot e^{kx}$.
-Det betyder at hvis vi bytter $k$ ud med $i$, må $e^{ix}$ bevæge sig mod en $90^\circ$ rotation med en hastighed af en radian per x.
+Altså man kan sige at $e^{kx}$ har hældningen $k \cdot e^{kx}$.
+Det betyder at hvis vi bytter $k$ ud med $i$, må $e^{ix}$ bevæge sig mod en $90^\circ$ rotation.
+
+Her kan man anvende Taylor serier til at bevise at $e^z$
 
 Her vil en halv rotation derfor svare til $x=\pi$ og vi kan derved konkludere at $e^{\pi i} = -1$.
+
+#+caption: https://en.wikipedia.org/wiki/Euler's_formula
+#+attr_latex: :width 120
+[[./eulers_formula.png]]
 
 [fn:4] https://en.wikipedia.org/wiki/Euler%27s_constant
 
@@ -213,15 +219,15 @@ I eksemplet over kan man tydeligt se $O(n^2)$ kompleksiteten,
 der funktionen $b$, har $n$ led der skal udregnes
 og $b$ sig selv skal også computeres $n$ gange.
 
+\newpage
+
 Polynomier af en lige grad er spejlet om y-aksen.
 Polynomier af en ulige grad er spejlet om y-aksen og x-aksen.
 
-#+BEGIN_SRC sage :file even_and_odd.png
-beginning = 0
+#+BEGIN_SRC sage even_and_odd.png
+p = plot(1)
 
-p = plot(x^(beginning*2)) + plot(x^(beginning*2 +1), color='red')
-
-for n in range(beginning+2, 20):
+for n in range(0, 6):
     p = p + plot(x^(n * 2)) + plot(x^(n*2 +1), color='red')
 
 p
@@ -229,7 +235,7 @@ p
 
 #+caption: Lavet med sagemath
 #+RESULTS:
-[[file:even_and_odd.png]]
+[[file:/home/unic0rn9k/.sage/temp/unic0rn9k/22709/tmp_b6z75wcz.png]]
 
 Vi kan udnytte den egenskab af polynomier ved at splitte vores polynomium op i ulige og lige led
 og derved evaluer polynomiet på mindre punkter.

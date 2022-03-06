@@ -1,4 +1,4 @@
-% Created 2022-03-05 Sat 18:52
+% Created 2022-03-06 Sun 11:45
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
@@ -71,9 +71,9 @@ Jeg vil stærkt opfordre til at prøve at downloade notebooken og prøve at eksp
 \newpage
 
 \section{Teori}
-\label{sec:org9cdcee4}
+\label{sec:org57a16be}
 \subsection{Rekursion og funktionel programmering}
-\label{sec:orgb989928}
+\label{sec:orgeddf27c}
 
 Rekursion er helt simpelt, en funktion der kalder sig selv.
 Dette bliver brugt meget i funktionel programmering.
@@ -102,7 +102,7 @@ I min case har jeg anvendt fuldkommen funktionel psudo kode til at lave en model
 for hvordan jeg ville strukturere min implementering af Cooley-Tukey FFT algoritme.
 
 \subsection{Hvad er en Fourier transformation?}
-\label{sec:org86f671a}
+\label{sec:orgf36c516}
 \newpage
 
 En Fourier transformation er en vektor transformation (der i øvrigt også kan udvides til n-dimensionelle tensore)
@@ -128,7 +128,7 @@ Her kan man altså se der ligger lokale maksimal punkter lige omkring 7, 14 og 1
 \bigskip
 
 \subsection{DFT}
-\label{sec:orgc822cd3}
+\label{sec:orgb60a3b6}
 DFT er kort for diskret Fourier transformation, og var den originale formel opdaget af Joseph Fourier i 1830.
 Han fandt ud af, hvordan man kunne lave de her transformationer, før man kunne udregne dem på computere,
 eller havde nogen praktisk anvendelse til dem\footnote{\url{https://en.wikipedia.org/wiki/Joseph\_Fourier}}.
@@ -144,7 +144,7 @@ den kan se lidt skræmmende ud, men er nem nok at forstå når man lige har styr
 \bigskip
 
 \subsubsection{Komplekse tal og Euler's identitet}
-\label{sec:org62450fb}
+\label{sec:orga112567}
 
 Et komplekst tal er et tal bestående af en imaginær del og en reel del (summen af dem).
 Den imaginære del af det komplekse tal er defineret som produktet af et
@@ -185,13 +185,21 @@ $$
 Dette udtryk kommer af at \(e^x\) er sit eget derivativ (\(e\) er Euler's konstant \footnote{\url{https://en.wikipedia.org/wiki/Euler\%27s\_constant}}),
 det vil altså siges at \(\frac{d}{dx}e^{kx} = k\cdot e^{kx}\), hvor k er en konstant.
 
-Altså man kan sige at \(e^{kx}\) bevæger sig i retningen \(k \cdot e^{kx}\).
-Det betyder at hvis vi bytter \(k\) ud med \(i\), må \(e^{ix}\) bevæge sig mod en \(90^\circ\) rotation med en hastighed af en radian per x.
+Altså man kan sige at \(e^{kx}\) har hældningen \(k \cdot e^{kx}\).
+Det betyder at hvis vi bytter \(k\) ud med \(i\), må \(e^{ix}\) bevæge sig mod en \(90^\circ\) rotation.
+
+Her kan man anvende Taylor serier til at bevise at \(e^z\)
 
 Her vil en halv rotation derfor svare til \(x=\pi\) og vi kan derved konkludere at \(e^{\pi i} = -1\).
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=120]{./eulers_formula.png}
+\caption{\url{https://en.wikipedia.org/wiki/Euler's\_formula}}
+\end{figure}
+
 \subsubsection{Uddybning af Fourier transformation}
-\label{sec:orge92577e}
+\label{sec:org6345f20}
 
 Den inderste del af den diskrete Fourier transformering kan ses lidt som et prik produkt
 $$
@@ -218,10 +226,10 @@ DFT algoritmen har en algoritmisk kompleksitet på \(O(n^2)\) der \(\hat{g}\) er
 \newpage
 
 \subsection{FFT (Fast Fourier Transformation)}
-\label{sec:org63aef1e}
+\label{sec:orgd0253a0}
 
 \subsubsection{Koefficient to punkt repræsentation}
-\label{sec:org61740c7}
+\label{sec:orge4eda6b}
 
 Fourier transformeringen svares ikke kun til en tids til frekvens domæne transformering,
 men også til en koefficient til punkt repræsentation,
@@ -266,15 +274,15 @@ I eksemplet over kan man tydeligt se \(O(n^2)\) kompleksiteten,
 der funktionen \(b\), har \(n\) led der skal udregnes
 og \(b\) sig selv skal også computeres \(n\) gange.
 
+\newpage
+
 Polynomier af en lige grad er spejlet om y-aksen.
 Polynomier af en ulige grad er spejlet om y-aksen og x-aksen.
 
 \begin{verbatim}
-beginning = 0
+p = plot(1)
 
-p = plot(x^(beginning*2)) + plot(x^(beginning*2 +1), color='red')
-
-for n in range(beginning+2, 20):
+for n in range(0, 6):
     p = p + plot(x^(n * 2)) + plot(x^(n*2 +1), color='red')
 
 p
@@ -282,7 +290,7 @@ p
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=.9\linewidth]{even_and_odd.png}
+\includegraphics[width=.9\linewidth]{/home/unic0rn9k/.sage/temp/unic0rn9k/22709/tmp_b6z75wcz.png}
 \caption{Lavet med sagemath}
 \end{figure}
 
@@ -368,7 +376,7 @@ Her bliver \(f(\omega_n^j)\) evalueret rekursivt indtil et 0 grads polynomium er
 De negative evalueringer bliver placeret på højrehåndssiden af den resulterende vektor og de positive på højre side.
 
 \section{Tooling (programmering)}
-\label{sec:orga5fe218}
+\label{sec:org7e23960}
 Jeg valgte at skrive koden til denne case i rust, da jeg er komfortabel med sproget,
 og gerne ville eksperimentere med at lave en hurtig implementering af Cooley-Tukey algoritmen.
 
@@ -382,7 +390,7 @@ da det betød jeg kunne smide nogen grafer ind, og have dem opdateret i næsten 
 mens jeg arbejdede på implementeringen af FFT algoritmen.
 
 \subsection{Rust sprog paradimer}
-\label{sec:orgd2b9f06}
+\label{sec:orgb752978}
 Rust er et memory-safe programmeringssprog,
 hvilket betyder at det by-default ikke lader en skrive koder, der kan resultere i undefined-behavior\footnote{\url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}}.
 Dette betyder at rust har en borrow-checker der ikke lader ens kode compile' hvis det bryder nogen regler defineret i rust sprog specifikationerne.
@@ -398,13 +406,13 @@ I min kode har jeg for eksempel valgt at lave en meget unsafe implementering af 
 men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere undefined behavior i sin kode ved brug af min algoritme.
 
 \section{Inplace operationer og statisk allokering}
-\label{sec:orge18b239}
+\label{sec:org849c817}
 
 \section{Twiddle factor}
-\label{sec:org7a84a8a}
+\label{sec:org14eb315}
 
 \section{Bibliografi}
-\label{sec:org3d6a7e0}
+\label{sec:orgf65bb26}
 
 1: Undefined-behavior - \url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}
 
@@ -416,7 +424,7 @@ men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere
 
 
 \section{Bilag}
-\label{sec:org0adfd87}
+\label{sec:org6531fa8}
 
 Kode som pdf vedhæftet på næste side\ldots{}
 Grafer kan ikke vises i pdf'en, derfor anbefaler jeg at kigge på notebook'en linket til i toppen af dokumentet.
