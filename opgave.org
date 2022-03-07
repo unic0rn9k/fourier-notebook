@@ -259,7 +259,7 @@ p
 
 #+caption: Lavet med sagemath
 #+RESULTS:
-[[file:/home/unic0rn9k/.sage/temp/unic0rn9k/22709/tmp_b6z75wcz.png]]
+[[file:/home/unic0rn9k/.sage/temp/unic0rn9k/14657/tmp_kotj9xdn.png]]
 
 Vi kan udnytte den egenskab af polynomier ved at splitte vores polynomium op i ulige og lige led
 og derved evaluer polynomiet på færre punkter.

@@ -1,4 +1,4 @@
-% Created 2022-03-06 Sun 14:13
+% Created 2022-03-07 Mon 12:21
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
@@ -51,6 +51,11 @@
  pdfsubject={},
  pdfcreator={Emacs 29.0.50 (Org mode 9.6)}, 
  pdflang={Danish}}
+\makeatletter
+\newcommand{\citeprocitem}[2]{\hyper@linkstart{cite}{citeproc_bib_item_#1}#2\hyper@linkend}
+\makeatother
+
+\usepackage[notquote]{hanging}
 \begin{document}
 
 \maketitle
@@ -71,9 +76,9 @@ Jeg vil stærkt opfordre til at prøve at downloade notebooken og prøve at eksp
 \newpage
 
 \section{Teori}
-\label{sec:org48f2607}
+\label{sec:orgf21774c}
 \subsection{Rekursion og funktionel programmering}
-\label{sec:org49aefbc}
+\label{sec:org3716133}
 
 Rekursion er helt simpelt, det der sker når en funktion der kalder sig selv.
 Dette bliver brugt meget i funktionel programmering.
@@ -102,11 +107,11 @@ I min case har jeg anvendt fuldkommen funktionel psudo kode til at lave en model
 for hvordan jeg ville strukturere min implementering af Cooley-Tukey FFT algoritme.
 
 \subsubsection{:)}
-\label{sec:orga78afe1}
+\label{sec:org549e76a}
 \newpage
 
 \subsection{Hvad er en Fourier transformation?}
-\label{sec:org0b8030f}
+\label{sec:org95f2b98}
 
 En Fourier transformation er en vektor transformation (der i øvrigt også kan udvides til n-dimensionelle tensore)
 der blandt andet kan anvendes til at transformere et polynomium,
@@ -135,7 +140,7 @@ Her kan man altså se der ligger lokale maksimal punkter lige omkring 7, 14 og 1
 \bigskip
 
 \subsection{DFT}
-\label{sec:org35ab26c}
+\label{sec:orged60637}
 DFT er kort for diskret Fourier transformation, og var den originale formel opdaget af Joseph Fourier i 1830.
 Han fandt ud af, hvordan man kunne lave de her transformationer, før man kunne udregne dem på computere,
 eller havde nogen praktisk anvendelse til dem\footnote{\url{https://en.wikipedia.org/wiki/Joseph\_Fourier}}.
@@ -151,7 +156,7 @@ den kan se lidt skræmmende ud, men er nem nok at forstå når man lige har styr
 \bigskip
 
 \subsubsection{Komplekse tal, Euler's formel og Euler's identitet}
-\label{sec:org349558b}
+\label{sec:org16c6b75}
 
 Et komplekst tal er et tal bestående af en imaginær del og en reel del (summen af dem).
 Den imaginære del af det komplekse tal er defineret som produktet af et
@@ -214,11 +219,11 @@ Her vil en halv rotation derfor svare til \(x=\pi\) og vi kan derved konkludere 
 \end{figure}
 
 \subsubsection{:)}
-\label{sec:org6eba5ed}
+\label{sec:org5912fd5}
 \newpage
 
 \subsubsection{Uddybning af Fourier transformation}
-\label{sec:org02844df}
+\label{sec:org6612cf8}
 
 Fourier transformationen er nemmere at forstå hvis man deler den op i bider.
 Den inderste del af den diskrete Fourier transformering kan ses lidt som et prik produkt
@@ -248,10 +253,10 @@ DFT algoritmen har en algoritmisk kompleksitet på \(O(n^2)\) der \(\hat{g}\) er
 \newpage
 
 \subsection{FFT (Fast Fourier Transformation)}
-\label{sec:orgc7c9715}
+\label{sec:org62d2979}
 
 \subsubsection{Koefficient to punkt repræsentation}
-\label{sec:org0f6e23b}
+\label{sec:orgc8a8536}
 
 Fourier transformeringen svares ikke kun til en tids til frekvens domæne transformering,
 men også til en koefficient til punkt repræsentation.
@@ -314,7 +319,7 @@ p
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=.9\linewidth]{/home/unic0rn9k/.sage/temp/unic0rn9k/22709/tmp_b6z75wcz.png}
+\includegraphics[width=.9\linewidth]{/home/unic0rn9k/.sage/temp/unic0rn9k/14657/tmp_kotj9xdn.png}
 \caption{Lavet med sagemath}
 \end{figure}
 
@@ -359,7 +364,7 @@ Her skal \(n\) altid være \(2^{noget}\), for at polynomiet kan deles op i posit
 \bigskip
 
 \subsubsection{n'th roots of unity}
-\label{sec:orgf9f84a6}
+\label{sec:org5eb2748}
 
 Her anvendes Euler's formel til at udregne \(n\) komplekse tal der er liggeligt fordelt på en enheds cirkel.
 De punkter bliver noteret som \(\omega_n\) og kan udregnes med
@@ -408,7 +413,7 @@ I min kode har jeg divideret \(n\) med 2 i de rekursive kald i stedet for at anv
 \end{equation}
 
 \section{Tooling (programmering)}
-\label{sec:org133d84f}
+\label{sec:org4242771}
 Jeg valgte at skrive koden til denne case i rust, da jeg er komfortabel med sproget,
 og gerne ville eksperimentere med at lave en hurtig implementering af Cooley-Tukey algoritmen.
 
@@ -422,7 +427,7 @@ da det betød jeg kunne smide nogen grafer ind, og have dem opdateret i næsten 
 mens jeg arbejdede på implementeringen af FFT algoritmen.
 
 \subsection{Rust sprog paradimer}
-\label{sec:orgbe5837a}
+\label{sec:org030215c}
 Rust er et memory-safe programmeringssprog,
 hvilket betyder at det by-default ikke lader en skrive koder, der kan resultere i undefined-behavior\footnote{\url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}}.
 Dette betyder at rust har en borrow-checker der ikke lader ens kode compile' hvis det bryder nogen regler defineret i rust sprog specifikationerne.
@@ -438,7 +443,7 @@ I min kode har jeg for eksempel valgt at lave en meget unsafe implementering af 
 men har så lavet en safe wrapper til den, der sikre at man ikke kan introducere undefined behavior i sin kode ved brug af min algoritme.
 
 \section{Min implementering af FFT algoritmen}
-\label{sec:orgf7c2b6f}
+\label{sec:orgc1b0518}
 I min implementering af Cooley-Tukey algoritmen har jeg ikke valgt at tage en fuldkommen funktionel tilgang.
 Jeg har i stedet valgt at bruge pointere der bliver shiftet til højre for hvert rekursivt kaldt.
 Dette gør at jeg har kunne lave en safe wrapper funktion der tjekker om længden af input vektoren er \(2^{noget}\)
@@ -462,7 +467,7 @@ fn fft<const LEN: usize>(x: StaticVecRef<Complex<f32>, LEN>)
 fft funktionen allokere altså et stykke hukommelse på samme størrelse som input vektoren, som det eneste.
 
 \section{Kan den blive endnu hurtigere?}
-\label{sec:orge9bda4f}
+\label{sec:orgb8127de}
 I min fft bliver \(\omega_n\) udregnet for hvert rekursivt kald hvor \(n\) er støre end 1.
 Dette er ret unødvendigt, der man altid kan udregne \(\omega_{n/2}\) kan udregnes ud fra \(\omega_n\).
 
@@ -475,7 +480,7 @@ Her ville man altså kunne for et signifikant performance increase,
 ved at indicere ind i et array med præ-udregnede twiddle factors, når Fourier transformation til en vektor med færre dimensioner end \(n\) skal udregnes.
 
 \section{Bibliografi}
-\label{sec:org4fbe7c5}
+\label{sec:org7659e51}
 
 1: Undefined-behavior - \url{https://doc.rust-lang.org/reference/behavior-considered-undefined.html}
 
@@ -490,7 +495,7 @@ ved at indicere ind i et array med præ-udregnede twiddle factors, når Fourier 
 6: Euler's formel - \url{https://en.wikipedia.org/wiki/Euler's\_formula}
 
 \section{Bilag}
-\label{sec:org7ca7524}
+\label{sec:orgf4fd99f}
 
 Kode som pdf vedhæftet på næste side\ldots{}
 Grafer kan ikke vises i pdf'en, derfor anbefaler jeg at kigge på notebook'en linket til i toppen af dokumentet.
