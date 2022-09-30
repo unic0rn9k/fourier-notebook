@@ -1,3 +1,6 @@
+# Doesn't work on nevest version of rust
+also slas has been abandoned. RIP old friend.
+
 # Fourier Notebook
 
 [Interactive notebook](https://nbviewer.org/github/unic0rn9k/fourier-notebook/blob/master/README.ipynb)
