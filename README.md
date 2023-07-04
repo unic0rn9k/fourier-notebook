@@ -1,5 +1,5 @@
-# Doesn't work on nevest version of rust
-also slas has been abandoned. RIP old friend.
+# Doesn't work on newest version of rust
+also I abandoned slas. RIP old friend.
 
 # Fourier Notebook
 
