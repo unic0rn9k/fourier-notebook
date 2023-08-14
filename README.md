@@ -1,7 +1,6 @@
-# Doesn't work on newest version of rust
-also I abandoned slas. RIP old friend.
-
 # Fourier Notebook
+
+This was made as a part of a school project.
 
 [Interactive notebook](https://nbviewer.org/github/unic0rn9k/fourier-notebook/blob/master/README.ipynb)
 
